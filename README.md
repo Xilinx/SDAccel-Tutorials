@@ -6,12 +6,12 @@
 
   </tr>
   <tr>
-    <td width="17%" align="center">Introduction</a></td>
+    <td width="17%" align="center">Overview</a></td>
     <td width="16%" align="center"><a href="./getting-started-tutorial/README.md">SDAccel™ Development Environment Getting Started Tutorial</a></td>
   </tr>
 </table>
 
-## Introduction  
+## Overview
 
 The Xilinx® SDAccel™ Development Environment is part of the SDx™ Development Toolchain. This toolchain allows you to create FPGA accelerated designs using C/C++, OpenCL C, or RTL programming languages. You can create these designs in the SDx GUI environment or through a Makefile flow.
 
