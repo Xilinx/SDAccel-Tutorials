@@ -124,7 +124,7 @@ Now that you understand parts of the makefile construction, it is time to compil
       xclbin  
       [sdaccel@localhost vadd ]$ ls xclbin/  
       krnl_vadd.sw_emu.xilinx_kcu1500_dynamic.xclbin  
-      krnl_vadd.sw_emu.xilinx_kcu1500_dynamic.xo_
+      krnl_vadd.sw_emu.xilinx_kcu1500_dynamic.xo
      ```
 
   2. To run the application in emulation, run the following command:  
@@ -188,7 +188,7 @@ Now that you understand parts of the makefile construction, it is time to compil
 
   6. The application generates a profiling summary report called `sdaccel_profile_summary` in CSV format.  
      You can convert this into a report shown in the Lab 1 profile summary and explore it in the SDx™ IDE. To do this, run the following command:  
-     `[sdaccel@localhost vadd]$ sdx_analyze profile sdaccel_profile_summary.csv`  
+     `sdx_analyze profile sdaccel_profile_summary.csv`  
      This generates an `sdaccel_profile_summary.xprf` file. To view this report, open the SDx IDE, select **File > Open File**, and click the file from the menu. The report is shown below.  
      >**:pushpin: NOTE:** For viewing these reports, you do not need to use the workspace you previously used in Lab 1. You can use this command to create a workspace locally for viewing these reports: `sdx -workspace ./lab2`. You may also need to close the Welcome Window to view the report.  
 
@@ -221,9 +221,9 @@ Now that you understand parts of the makefile construction, it is time to compil
   3. The output should be similar to the Software Emulation with the following output.  
      ```
       [sdaccel@localhost vadd]$ make check TARGETS=hw_emu DEVICES=xilinx_kcu1500_dynamic_5_0  
-      /<install location>/SDx/2017.4/bin/emconfigutil --platform xilinx_kcu1500_dynamic_5_0 --nd 1  
+      /<install location>/SDx/<version>/bin/emconfigutil --platform xilinx_kcu1500_dynamic_5_0 --nd 1  
       ...  
-      INFO: [ConfigUtil 60-895]    Target platform: <install location>/SDx/2017.4/platforms/xilinx_kcu1500_dynamic_5_0/xilinx_kcu1500_dynamic_5_0.xpfm  
+      INFO: [ConfigUtil 60-895]    Target platform: <install location>/SDx/<version>/platforms/xilinx_kcu1500_dynamic_5_0/xilinx_kcu1500_dynamic_5_0.xpfm  
       emulation configuration file `emconfig.json` is created in current working directory   
       ...  
       platform Name: Intel(R) OpenCL  
