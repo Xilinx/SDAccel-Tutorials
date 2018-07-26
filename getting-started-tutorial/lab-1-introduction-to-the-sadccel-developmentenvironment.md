@@ -29,7 +29,7 @@ This lab uses an example from the Xilinx® SDAccel™ Example GitHub repository,
 
      ![](./images/welcome_window.png)  
 
-  4. In the the SDx Welcome window, click **Create SDx Project**.  
+  4. In the SDx Welcome window, click **Create SDx Project**.  
      The Create a New SDx Project dialog box opens.  
 
      ![](./images/application_project.png)
@@ -95,7 +95,7 @@ This step shows you how to run software emulation for a design, by setting Run C
 
      ![](./images/project_settings.png)  
 
-  2. From the Github example, an accelerator already exists for the design. To add a hardware function to a design that does not have one, start by clicking on the Add Hardware Function button: ![](.\images\qpg1517374817485.png). This analyzes the C/C++ code and determines functions that can be used for acceleration.  
+  2. From the Github example, an accelerator already exists for the design. To add a hardware function to a design that does not have one, start by clicking on the Add Hardware Function button: ![](./images/qpg1517374817485.png). This analyzes the C/C++ code and determines functions that can be used for acceleration.  
 
   3. Click the Run button: ![](./images/lvl1517357172451.png) to run software emulation. This builds the project before running the emulation.  
 
@@ -141,7 +141,7 @@ This step shows you how to run software emulation for a design, by setting Run C
   15. After resuming debugging, SDx launches another gdb instance for the kernel code, and it also has a breakpoint at the beginning of the function. This allows for detailed analysis of the kernel and how the data looks being read into the function, and written out to memory. Once the kernel execution is done in gdb, that instance is terminated and you return to the main debugging thread. Press F8 to continue.  
       >**:pushpin: NOTE:**  The console view still shows the kernel debug outputs. Click the icon ![](./images/gqm1517357172417.png) to go back to the vadd.exe console and see the output from the host code.  
 
-  16. Close the Debug Perspective by going to the upper-right of the window where it shows the Debug ![](./images/cwo1517357172495.png) button, right-click, and select **Close**, or use the SDx button ![](./images/sdx_perspective_icon.png) to switch to the standard SDx perspective.
+  16. Close the Debug Perspective by going to the upper-right of the window where it shows the Debug ![](./images/cwo1517357172495.png) button, right-click, and select **Close**, or use the SDx button ![](./images/sdx_perspective_icon.PNG) to switch to the standard SDx perspective.
 
   17. Once back into the main SDx Perspective, close all tabs in the center Project Editor window except the Application Project Settings window.
 
@@ -169,7 +169,7 @@ This step covers running Hardware Emulation feature, as well as looking at the b
 
      ![](./images/guidance_view.PNG)  
 
-     >**:pushpin: NOTE:**  To see other performance optimization techniques and methodologies, refer to the  SDAccel Environment Profiling and Optimization Guide ([UG1207](https://www.xilinx.com/cgi-bin/docs/rdoc?v=2018.2;d=ug1207-sdaccel-optimization-guide.pdf)).  
+     >**:pushpin: NOTE:**  To see other performance optimization techniques and methodologies, refer to the  SDAccel Profiling and Optimization Guide ([UG1207](https://www.xilinx.com/cgi-bin/docs/rdoc?v=2018.2;d=ug1207-sdaccel-optimization-guide.pdf)).  
 
   5. Open the Application Timeline report.  
      This report shows the estimated time it takes for the host and kernel to complete the task and provides finer grained information on where bottlenecks can be. In this example, it is iterated twice and this timeline shows the kernel is run twice. Adding a marker, zooming, and expanding signals can help in identifying bottlenecks.  
@@ -204,7 +204,7 @@ To run the makefile flow, do the following:
 
   4. Navigate to the Emulation-SW directory and type: `make incremental`. The process produces a typical SDx log output.  
 
-     >**:pushpin: NOTE:** If no changes are made to the host or kernel code, this re-runs the entire software emulation flow.  
+     >**:pushpin: NOTE:** If no changes are made to the host or kernel code, this will do nothing because the compilation is already completed. It will output a warning like: make: Nothing to be done for `incremental'.  
 
 [Lab 2: Introduction to the SDAccel Makefile](./lab-2-introduction-to-the-sdaccel-makefile.md) goes into more detail on how to use the makefile and command line flow.  
 </details>
