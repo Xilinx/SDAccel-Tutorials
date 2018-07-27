@@ -270,7 +270,7 @@ Now that you understand parts of the makefile construction, it is time to compil
   2. Once the build is complete, prepare the board installation by using the following command:  
      `xbinst --platform xilinx_kcu1500_dynamic_5_0 -z -d `  
      Where:  
-     * `\--platform` is the platform to be used by the design.  
+     * `--platform` is the platform to be used by the design.  
      * `-z` archives the board installation files for deployment.  
      * `-d` is the destination directory to use (Required).  
 
@@ -283,6 +283,8 @@ Now that you understand parts of the makefile construction, it is time to compil
      `make check TARGETS=hw_emu DEVICES=xilinx_kcu1500_dynamic_5_0`  
      >**:pushpin: NOTE:** Running this command with the `TARGET` set to `hw` results in a runtime error on locating a platform.  
      As in the earlier step, the following reports are generated: profile summary, timeline trace, and system estimates.  
+Notes from Joyce: I am not quite sure the purpose of this step. Why hardware emulation is executed here in the hardware run step? 
+
 
   6. Use the following commands to convert the profile summary and timeline trace into files that SDx can read:
      ```
@@ -297,7 +299,7 @@ After completing this tutorial, you should be able to do the following:
 
   * Set up the SDx™ environment to run all commands in a terminal.  
   * Clone a Github repository.  
-  * Run the xcpp, xocc, emconfig, sdx_analyze profile, sdx_analyze trace commands to generate the application, binary container, and emulation model.  
+  * Run the xcpp, xocc, emconfigutil, sdx_analyze profile, sdx_analyze trace commands to generate the application, binary container, and emulation model.  
   * Write a makefile to compile an OpenCL™ kernel and host code.  
   * View the generated files from emulation in a text editor or the SDx IDE.  
   * Set up the environment and deploy the design to be used with the platform.  
