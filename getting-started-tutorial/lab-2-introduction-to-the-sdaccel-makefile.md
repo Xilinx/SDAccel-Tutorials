@@ -1,3 +1,6 @@
+<p align="right">
+	Read this page in other languages:<a href="../../2018.2-ja/getting-started-tutorial/lab-2-introduction-to-the-sdaccel-makefile.md">日本語</a>	
+</p>
 <table style="width:100%">
   <tr>
     <th width="100%" colspan="6"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>SDAccel Development Environment Getting Started Tutorial</h2>
