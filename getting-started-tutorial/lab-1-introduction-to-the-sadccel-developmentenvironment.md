@@ -1,5 +1,5 @@
 <p align="right">
-	Read this page in other languages:<a href="../../2018.2-ja/getting-started-tutorial/lab-1-introduction-to-the-sadccel-developmentenvironment.md">日本語</a>	
+	Read this page in other languages:<a href="../../Japanese-master/getting-started-tutorial/lab-1-introduction-to-the-sadccel-developmentenvironment.md">日本語</a>	
 </p>
 <table style="width:100%">
   <tr>
