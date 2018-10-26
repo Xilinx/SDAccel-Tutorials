@@ -1,5 +1,5 @@
 <p align="right">
-	Read this page in other languages:<a href="../Japanese-master/README.md">日本語</a>	
+	Read this page in other languages:<a href="../Japanese-master/README.md">日本語</a>
 </p>
 <table style="width:100%">
   <tr>
@@ -11,6 +11,7 @@
   <tr>
     <td width="17%" align="center">Overview</a></td>
     <td width="16%" align="center"><a href="./getting-started-tutorial/README.md">SDAccel™ Development Environment Getting Started Tutorial</a></td>
+		<td width="16%" align="center"><a href="./docs/getting-started-with-c-kernels/getting-started.md">Getting Started with C/C++ Kernels</a></td>
   </tr>
 </table>
 
