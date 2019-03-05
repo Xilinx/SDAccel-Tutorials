@@ -5,12 +5,11 @@ Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>
 <table width="100%">
   <tr width="100%">
     <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.3 SDAccel™ Development Environment Tutorials</h1>
-    <a href="https://github.com/Xilinx/SDAccel-Tutorials/branches/all">See other versions</a>
     </td>
  </tr>
  </table>
 
-<!--## Beginner
+## Beginner
 
  <table style="width:100%">
  <tr>
@@ -21,14 +20,14 @@ Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>
  <tr>
  <td align="center"><a href="docs/getting-started-rtl-kernels/README.md">Getting Started with RTL Kernels</a></td>
  <td align="center">RTL</td>
- <td>This tutorial demonstrates integrating an existing RTL with the SDAccel™ environment flow.</td>
+ <td>This tutorial demonstrates how to use the SDAccel environment to program an RTL kernel into an FPGA and build a Hardware Emulation using a common development flow.</td>
  </tr>
    <tr>
    <td align="center"><a href="docs/getting-started-c-kernels/README.md">Getting Started with C/C++ Kernels</a></td>
    <td align="center">C</td>
    <td>This tutorial demonstrates building a basic OpenCL™-based design using the SDx™ development environment GUI and learning some of the features that enable you to do performance profiling and optimization.</td>
    </tr>
-   </table>-->
+   </table>
 
 ## Intermediate
 
