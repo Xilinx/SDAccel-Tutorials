@@ -106,4 +106,4 @@ After it is done, a window prompts you to confirm importing the `Vivado Settings
 You will see the incremental flow continuing to the Vivado implementation flow and generating bitstream.
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

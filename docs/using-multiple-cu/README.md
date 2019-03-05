@@ -145,4 +145,4 @@ You have learned how to alter the kernel linking process to execute same kernel 
 This tutorial demonstrates the mechanism through hardware emulation. You can change the Active Build Configuration to **System**, and then click the **Run** button to compile and execute this on the actual FPGA board. After this run finishes, you can confirm the timeline trace report from the system run, as well.
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

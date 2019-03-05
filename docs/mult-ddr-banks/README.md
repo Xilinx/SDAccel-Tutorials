@@ -210,4 +210,4 @@ This tutorial showed you how to change the default mapping of ports `in1`, `in2`
 * Build the application and verify DDR mapping.
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

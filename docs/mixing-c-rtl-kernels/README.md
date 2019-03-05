@@ -18,7 +18,7 @@ The SDAccel™ development environment provides a platform to accelerate your fu
 ### Workflow
 In this tutorial, you will use the SDAccel tool in GUI mode to initially create a new project, and add a C++ based kernel. Then, you will generate a binary container (xclbin) containing the C++ based kernel for implementation on an FPGA. Then, run the design in software emulation. You will review the generated Application Timeline report to see the kernel being called and run by the host application.
 
-In the second section, you will create a simple RTL kernel using the RTL Kernel Wizard, and add it to the project. The binary container will be updated to include the RTL based kernel, as well as the C++ kernel. You will update the host code to use the RTL based kernel, and run hardware emulation. Once again, you will review the Application Timeline and see both kernels being called and run by the host application.
+In the second section, you will create a simple RTL kernel using the RTL Kernel Wizard and add it to the project. The binary container will be updated to include the RTL based kernel, as well as the C++ kernel. You will update the host code to use the RTL-based kernel and run hardware emulation. Once again, you will review the Application Timeline and see both kernels being called and run by the host application.
 
 ## Using C/C++ Kernels
 TO begin, launch the SDAccel environment, create a new project, and import sources. For reference, the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/cgi-bin/docs/rdoc?v=2018.3;d=ug1023-sdaccel-user-guide.pdf)) provides specific details. The [Getting Started with C/C++ Kernels](./docs/getting-started-c-kernels/README.md) lab also walks through the specific steps in more detail.
@@ -33,20 +33,20 @@ $ sdx
 ### Create a new project with the Project Creation wizard
 
 1. Select **SDx Application Project** from the File / New menu.
-2. Specify the following project name: `mixed_c_rtl` and
+2. Specify the following project name: `mixed_c_rtl`
 3. Click **Next**.
 4. In the Platform dialog box, select the `xilinx_u200_xdma_201830_1` platform, and then click **Next**.
 5. Finally, in the Templates dialog, select **Empty Application**, and then click **Finish**.
 
 ### Add Source Files to the prj_c_rtl Project
 
-1. In the SDAccel Project Explorer pane, click on Import Sources, which is circled in red in the following image:  
+1. In the SDAccel Project Explorer pane, click **Import Sources**, which is circled in red in the following image:  
 ![Missing Image:ImportSources](images/import_sources_icon.PNG)  
-2. Browse to the [`mixing-c-rtl-kernels/reference-files`](/mixing-c-rtl-kernels/reference-files) sub-directory and click OK.
-3. Select all the files in the directory, and click **Finish**. This will import the host and C++ kernel source files from the `reference-files` directory to the `mixing_c_rtl` project’s `src` directory.
+2. Browse to `mixing-c-rtl-kernels/reference-files` and click **OK**.
+3. Select all the files in the directory, and then click **Finish**. This will import the host and C++ kernel source files from the `reference-files` directory to the `mixing_c_rtl` project’s `src` directory.
 
-The kernel (`krnl_vadd.cpp`) adds two input vectors, and generates the output result.
-The host code (`host.cpp`) sets up the platform, and defines global memory buffer and connections to the kernel. Four important set of OpenCL API calls in the host code are described below. You can see these calls by opening the `host.cpp` file.
+The kernel (`krnl_vadd.cpp`) adds two input vectors and generates the output result.
+The host code (`host.cpp`) sets up the platform and defines global memory buffer and connections to the kernel. Four important set of OpenCL API calls in the host code are described below. You can see these calls by opening the `host.cpp` file.
 
 The first set of code, on lines 135-138 of the `host.cpp` file, creates the program to execute. It uses the binary container which contains just the C++ based kernel.
 
@@ -96,10 +96,10 @@ As you can see, the high-level OpenCL calls are independent of the language that
 
 1. Under Project Explorer, double-click **project.sdx** to open the SDx Application Project Settings window.  
 ![Missing Image:OpenSDxAppPrj](images/mixing-c-rtl-kernels_open_sdx_app_prj_settings.PNG)  
-By doing this, SDx environment scans all your source files and automatically identifies kernels present in the project. In our case, there is only one. Select it and Click OK
+
 2. Click the lightning bolt icon in the Hardware Function section, as shown below.  
 ![Missing Image:HW_Functions](images/mixing-c-rtl-kernels_hw_functions.PNG)  
-After the you click the lightning bolt icon, the SDx™ development environment scans all your source files, and automatically identifies kernels present in the project (in this case, there is only one kernel).
+After you click the lightning bolt icon, the SDx™ development environment scans all your source files, and automatically identifies kernels present in the project (in this case, there is only one kernel).
 3. Select the kernel, and then click **OK**.  
 A binary container with the default ‘binary_container_1’ name is created containing the krnl_vadd, as shown below.  
 ![Missing Image:BinContainer](images/mixing-c-rtl-kernels_bin_container_with_cpp.PNG)  
@@ -139,19 +139,19 @@ As you will see, regardless of how the kernels were designed, the host code acce
 
 ### Use the RTL Kernel Wizard
 
-First, you will use the RTL Kernel Wizard to generate a kernel that will add a constant to an input vector. The RTL Kernel Wizard can automate some of the steps needed to package an RTL design into a compiled kernel object file (`.xo`) that can accessed by the SDAccel environment.
+First, you will use the RTL Kernel Wizard to generate a kernel that will add a constant to an input vector. The RTL Kernel Wizard can automate some of the steps needed to package an RTL design into a compiled kernel object file (`.xo`) that can be accessed by the SDAccel environment.
 
 By default, the wizard creates a simple vector addition kernel, like the C++ kernel used in the first part of this tutorial. You will create and add this RTL Kernel to your project.  
->**IMPORTANT**: For the purposes of creating the RTL kernel in this tutorial, you will quickly walk through the steps without much detail. However, the RTL Kernel Wizard is discussed in great detail in the [Getting Started with RTL Kernels](./docs/getting-started-rtl-kernels/README.md) tutorial. In addition, complete details of the RTL Kernel Wizard can be found in the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/cgi-bin/docs/rdoc?v=2018.3;d=ug1023-sdaccel-user-guide.pdf)).
+>**IMPORTANT**: For the purposes of creating the RTL kernel in this tutorial, you will quickly walk through the steps without much detail. However, the RTL Kernel Wizard is discussed in detail in the [Getting Started with RTL Kernels](./docs/getting-started-rtl-kernels/README.md) tutorial. In addition, complete details of the RTL Kernel Wizard can be found in the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/cgi-bin/docs/rdoc?v=2018.3;d=ug1023-sdaccel-user-guide.pdf)).
 
 ##### Open the RTL Kernel Wizard
 
-1.	Under the Xilinx menu, select **RTL Kernel Wizard**. This opens RTL Kernel Wizard, which starts with a Welcome page.
+1.	Under the Xilinx menu, select **RTL Kernel Wizard**. This opens the RTL Kernel Wizard, which starts with a Welcome page.
 2. Click **Next**.
 3. In the General Settings dialog box, keep all the default settings, and click **Next**.
 4. In the Scalars dialog box, set the number of scalar arguments to `0`, and click **Next**.
 5. In the Global Memory dialog box, keep all the default settings, and click **Next**.  
-The Summary dialog box provides a summary of the RTL kernel settings, and includes a function prototype which conveys what a kernel call would look like as a C function.
+The Summary dialog box provides a summary of the RTL kernel settings and includes a function prototype which conveys what a kernel call would look like as a C function.
 6. Click **OK**.
 
 
@@ -179,7 +179,7 @@ The kernel source folder contains two files:
 - `.xo` file (RTL Kernel)  
 ![Missing Image:KernelDir](images/mixing-c-rtl-kernels_kernel_dir_structure.PNG)
 
-Since the project already includes the host code, you must delete the generated `host_example.cpp` file.  To do this right-click the `host_example.cpp` file, and select **delete**.
+Since the project already includes the host code, you must delete the generated `host_example.cpp` file.  To do this right-click the `host_example.cpp` file and select **delete**.
 
 ### Add New Kernel to Binary Container
 
@@ -188,8 +188,7 @@ With the new kernel added to the project, you must now add it to the binary cont
 1. In the SDx Application Project Settings window, from the Hardware Functions area, click on the lightning bolt icon.
 2. Select the RTL kernel that you just created, and then click **OK**.  
 This adds the RTL kernel to the binary container (which already contains the C++ kernel).
-3. Update the host code (`host.cpp`) to incorporate the new kernel, since the updates have already been done.
-4. Open the `host.cpp` file, and remove the comment `//` on line 49 to define `ADD_RTL_KERNEL`:
+3. Update the host code (`host.cpp`) to incorporate the new kernel, since the updates have already been done. Open the `host.cpp` file, and remove the comment `//` on line 49 to define `ADD_RTL_KERNEL`:
   * Before:
   ```
   //#define ADD_RTL_KERNEL
@@ -199,9 +198,10 @@ This adds the RTL kernel to the binary container (which already contains the C++
   #define ADD_RTL_KERNEL
   ```
 
-5. Save the file.
+4. Save the file.
 
-  The updated `host.cpp` file includes additional OpenCL calls in the host code, as follows. The actual OpenCL calls are identical to the ones used for the C++ based kernel, with the arguments changed for the RTL-based kernel.  
+  The updated `host.cpp` file includes additional OpenCL calls and are briefly described as follows. The actual OpenCL calls are identical to the ones used for the C++ based kernel, with the arguments changed for the RTL-based kernel.  
+
   Though the first set of code was not changed, the binary container now contains _both_ the C++ and RTL kernels.
   ```
   cl::Program::Binaries bins;
@@ -209,28 +209,28 @@ This adds the RTL kernel to the binary container (which already contains the C++
   devices.resize(1);
   cl::Program program(context, devices, bins);
   ```
-6. Get the `sdx_kernel_wizard_0` object from the program, and assign the name `krnl_const_add` on line 145. The `sdx_kernel_wizard_0` object name will match the name generated with the RTL Wizard.
+  The following code gets the `sdx_kernel_wizard_0` object from the program and assigns the name `krnl_const_add` on line 145. The `sdx_kernel_wizard_0` object name will match the name generated with the RTL Wizard.
 ```
 cl::Kernel krnl_const_add(program,"sdx_kernel_wizard_0");
 ```
-7. Define the `krnl_const_add` kernel arguments on line 168. Important to note that in the host code, the buffer 'buffer_results' is passed directly from the C kernel to the RTL kernel via DDR without being moved back to the host memory.
+  Next we define the `krnl_const_add` kernel arguments on line 168. Important to note that in the host code, the buffer 'buffer_results' is passed directly from the C kernel to the RTL kernel via DDR without being moved back to the host memory.
 ```
 krnl_const_add.setArg(0,buffer_result);
 ```
 >**NOTE**: In the host code, the `buffer_results` buffer is passed directly from the C kernel to the RTL kernel via DDR without being moved back to the host memory.
-8. Launch the `krnl_const_add` kernel on line 173:
+  Launch the `krnl_const_add` kernel on line 173:
 ```
 q.enqueueTask(krnl_vector_add);
 ```  
 With the RTL kernel added to the binary container and the host code, you can rebuild the project and run hardware emulation.
 
-9. Ensure the active build configuration is set to **Emulation-HW**, then click on the run button, as shown below. This compiles and runs software emulation.  
+5. Ensure the active build configuration is set to **Emulation-HW**, then click on the run button, as shown below. This compiles and runs hardware emulation.  
 ![Missing Image:RunButton](images/mixing-c-rtl-kernels_run_button.PNG)  
 You will see `TEST WITH TWO KERNELS PASSED` in the Console window when emulation completes.  
 Open the Application Timeline report once more to see that the two kernels are running.
 
-10. In the Assistant window, expand **Emulation-HW** and the default kernel, and then double-click on the Application Timeline file to open it.  
-6.	Under **Device**->**Binary Container**, traverse along the timeline and zoom in. You will now see both compute units `krnl_vadd_1` and `rtl_kernel` running.  
+6. In the Assistant window, expand **Emulation-HW** and the default kernel, and then double-click on the Application Timeline file to open it.  
+7. Under **Device**->**Binary Container**, traverse along the timeline and zoom in. You will now see both compute units `krnl_vadd_1` and `rtl_kernel` running.  
 ![Missing Image:Application Timeline 2](images/mixing-c-rtl-kernels_timeline_two_kernels.PNG)
 
 ## Conclusion
@@ -238,4 +238,4 @@ Open the Application Timeline report once more to see that the two kernels are r
 This tutorial has demonstrated how SDAccel environment applications can use any combination of kernels, regardless of the language they were developed in. Specifically, we showed C++ and RTL based kernels running in the same application. The host code accesses and runs the kernels in an identical manner.
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

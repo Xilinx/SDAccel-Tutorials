@@ -5,6 +5,7 @@ Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>
 <table width="100%">
   <tr width="100%">
     <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.3 SDAccel™ Development Environment Tutorials</h1>
+    <a href="https://github.com/Xilinx/SDAccel-Tutorials/branches/all">See other versions</a>
     </td>
  </tr>
  </table>
@@ -75,4 +76,4 @@ Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>
  </table>
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

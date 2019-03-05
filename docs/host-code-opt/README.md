@@ -347,4 +347,4 @@ There are many ways to implement your host code and improve performance in gener
 For more information about tools and processes you can use to analyze the application performance in general, see the _SDAccel Profiling and Optimization Guide_ ([UG1207](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1207-sdaccel-optimization-guide.pdf)).
 
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
