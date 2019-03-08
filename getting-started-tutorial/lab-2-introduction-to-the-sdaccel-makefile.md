@@ -1,9 +1,9 @@
 <p align="right">
-	Read this page in other languages:<a href="../../Japanese-master/getting-started-tutorial/lab-2-introduction-to-the-sdaccel-makefile.md">日本語</a>	
+	Read this page in other languages:<a href="../../Japanese-master/getting-started-tutorial/lab-2-introduction-to-the-sdaccel-makefile.md">日本語</a>
 </p>
 <table style="width:100%">
   <tr>
-    <th width="100%" colspan="6"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>SDAccel Development Environment Getting Started Tutorial</h2>
+    <th width="100%" colspan="6"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.2 SDAccel Development Environment Getting Started Tutorial</h2>
 </th>
   </tr>
   <tr>
@@ -286,7 +286,7 @@ Now that you understand parts of the makefile construction, it is time to compil
      `make check TARGETS=hw_emu DEVICES=xilinx_kcu1500_dynamic_5_0`  
      >**:pushpin: NOTE:** Running this command with the `TARGET` set to `hw` results in a runtime error on locating a platform.  
      As in the earlier step, the following reports are generated: profile summary, timeline trace, and system estimates.  
-Notes from Joyce: I am not quite sure the purpose of this step. Why hardware emulation is executed here in the hardware run step? 
+Notes from Joyce: I am not quite sure the purpose of this step. Why hardware emulation is executed here in the hardware run step?
 
 
   6. Use the following commands to convert the profile summary and timeline trace into files that SDx can read:

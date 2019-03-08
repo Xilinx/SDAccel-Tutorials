@@ -1,12 +1,12 @@
 <table style="width:100%">
   <tr>
-    <th width="100%" colspan="6"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>SDAccel Development Environment Getting Started Tutorial</h2>
+    <th width="100%" colspan="6"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.2 SDAccel Development Environment Getting Started Tutorial</h2>
 </th>
   </tr>
     <tr>
     <td><a href="../README.md">:house: HOME </a></td>
     <td colspan="2" align="center"><b>Getting Started with C/C++ Kernels</b></td>
-  </tr> 
+  </tr>
   <tr>
     <td align="center"><a href="README.md">Introduction</td>
     <td align="center"><a href="lab-1-introduction-to-the-sadccel-developmentenvironment.md">Lab 1: Introduction to the SDAccel Development Environment</td>
@@ -122,7 +122,7 @@ Now that you understand parts of the makefile construction, it is time to compil
   1. To compile the application for Software Emulation, run the following command:  
      `make all REPORT=estimate TARGETS=sw_emu DEVICES=xilinx_u200_xdma_201820_2`  
      When you define the `TARGETS` this way, it passes the value and overwrites the default that was set in the makefile.
-     
+
      The four files that are generated are:  
 
      * host (host executable)  
