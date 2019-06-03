@@ -26,8 +26,8 @@ This tutorial is based on the Xilinx SDAccel™ GitHub Examples<!--check on how 
 
 ## Related information
 
- * [Lab 1: Introduction to the SDAccel Development Environment](/lab-1-introduction-to-the-sdaccel-gui.md)
- * [Lab 2: Introduction to the SDAccel Makefile](/lab-2-introduction-to-the-sdaccel-makefile.md)
+ * [Lab 1: Introduction to the SDAccel Development Environment](./lab-1-introduction-to-the-sdaccel-gui.md)
+ * [Lab 2: Introduction to the SDAccel Makefile](./lab-2-introduction-to-the-sdaccel-makefile.md)
 
 <hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

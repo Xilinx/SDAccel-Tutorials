@@ -146,7 +146,7 @@ For details about reports and Debug, refer to the _SDAccel Environment User Guid
 
 8. Before you can run in Debug, you must set a breakpoint. Setting breakpoints at key points in the execution helps to identify problems. To pause the host code prior to kernel debug, right-click <`line 89`> in the blue area (see figure below) on the (`OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_in1, buffer_in2},0/* 0 means from host*/));`), and select **Toggle Breakpoint**.
 
-   ![error: missing image](./images/debug_breakpoint_hw.PNG)
+   ![error: missing image](./images/debug_breakpoint_hw.png)
 
 9. To run Debug, click ![missing image: the Debug icon](./images/cwo1517357172495.png).
 
@@ -162,7 +162,7 @@ For details about reports and Debug, refer to the _SDAccel Environment User Guid
     1. Press **F8**.
     2. Select **Run**>**Resume**.
 
-       ![error: missing image](./images/debug_configuration_hw.PNG)
+       ![error: missing image](./images/debug_configuration_hw.png)
 
 13. After resuming debugging, the SDx tool launches another gdb instance for the kernel code, which also has a breakpoint at the beginning of the function.
 
@@ -179,7 +179,7 @@ For details about reports and Debug, refer to the _SDAccel Environment User Guid
 
 16. After you are in the main SDx Perspective, close all tabs in the center Project Editor window _except_ the Application Project Settings window.
 
-## Step 4: Run Hardware Emulation
+## Step 3: Run Hardware Emulation
 
 This step covers running the Hardware Emulation feature, as well as looking at the basics of profiling and reports.
 
@@ -213,7 +213,7 @@ The main difference between Emulation-SW and Emulation-HW is that when you emula
 
    ![error: missing image](./images/183_hls_hw.png)  
 
-## Step 5: Use the Makefile Flow
+## Step 4: Use the Makefile Flow
 
 This step explains the basics of the makefile flow and how the SDx™ IDE uses it. The advantages of using this flow include:
 

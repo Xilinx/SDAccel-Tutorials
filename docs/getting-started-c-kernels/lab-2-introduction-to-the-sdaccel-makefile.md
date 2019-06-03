@@ -17,19 +17,23 @@ The following lab uses an example from the Xilinx® SDAccel™ Example GitHub re
 
 ## Step 1: Prepare and Set up the SDAccel Environment
 
-In this step, you will set up the SDx™ environment to run in command line and clone the GitHub repository for SDAccel™.
+In this step, you will set up the SDx™ environment to run in command line and clone the GitHub repository for SDAccel Examples.
 
-1. Launch a terminal window and source the settings scripts found in the SDx environment using one of the following commands:
+1. Launch a terminal window and set up the SDx environment using the following commands:
 
    ```c
-   source <SDx_install_location>/<version>/settings64.csh
+   source /opt/xilinx/SDx/2018.3/settings64.sh
    ```
 
    ```c
-   source <SDx_install_location>/<version>/settings64.sh
+   source /opt/xilinx/xrt/setup.sh
    ```
 
-   This enables you to run the SDx command lines without having to use the GUI.
+   * The first command sets up the environment variables required by the SDx tool.
+   * The second command sets up the runtime environment.
+
+     This enables you to run the SDx command lines without having to use the GUI.
+     >**NOTE**: The paths shown in the above commands assume the SDx tool is installed under the default folder. If you install the SDx tool in other paths, modify the command accordingly.
 
    If you downloaded the SDAccel examples through the SDx IDE, as described in Lab 1, then you can access the files from that location. On Linux, the files are downloaded to `/home/<user>/.Xilinx/SDx/<version>/sdaccel_examples/` to a workspace of your choice using the following command:
 
@@ -42,7 +46,7 @@ In this step, you will set up the SDx™ environment to run in command line and 
 2. After the download is complete, navigate to the `vadd` directory in the SDAccel example using the following command:
 
    ```C
-   cd <workspace>/examples/getting_started/host/helloworld_c
+   cd <workspace>/examples/getting_started/hello_world/helloworld_c
    ```
 
    In this directory, run the `ls` command and view the files, which displays the following contents:
@@ -125,7 +129,7 @@ Now that you understand parts of the makefile construction, it is time to compil
 1. To compile the application for Software Emulation, run the following command:
 
    ```C
-   make all REPORT=estimate TARGETS=sw_emu DEVICES=xilinx_u200_xdma_201830_1`
+   make all REPORT=estimate TARGETS=sw_emu DEVICES=xilinx_u200_xdma_201830_1
    ```
 
    The four files that are generated are:
@@ -188,7 +192,7 @@ Now that you understand parts of the makefile construction, it is time to compil
 
 ## Step 4: Generate Additional Reports
 
-In this tutorial, you will create the `sdaccel.ini` file in the `helloworld_c` directory, and add the following contents:
+Before running the commands in this step, you must first create a `sdaccel.ini` file in the `helloworld_c` directory. The `sdaccel.ini` file should include the following contents:
 
 ```C
 [Debug]
