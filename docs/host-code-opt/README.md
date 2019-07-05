@@ -1,200 +1,225 @@
 <table>
  <tr>
-   <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.3 SDAccel™ Development Environment Tutorials</h1>
+   <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2019.1 SDAccel™ Development Environment Tutorials</h1>
    <a href="https://github.com/Xilinx/SDAccel-Tutorials/branches/all">See other versions</a>
    </td>
  </tr>
  <tr>
- <td align="center"><h3>Host Code Optimization</h3>
+ <td align="center"><h1>Host Code Optimization</h1>
  </td>
  </tr>
 </table>
 
-## Introduction
+# Introduction
 
-This tutorial concentrates on performance tuning of the host code associated with an FPGA Accelerated Application. Host code optimization is only one aspect of performance optimization, which also includes the following disciplines:
+This tutorial concentrates on performance tuning of the host code associated with an FPGA accelerated application. Host code optimization is only one aspect of performance optimization, which includes the following disciplines:
+
 * Host program optimization
 * Kernel code optimization
 * Topological optimization
 * Implementation optimization
 
+# Tutorial Overview
+
 In this tutorial, you will operate on a simple, single, generic C++ kernel implementation. This allows you to eliminate any aspects of the kernel code modifications, topological optimizations, and implementation choices from the analysis of host code implementations.
->The host code optimization techniques shown in this tutorial are limited to aspects for optimizing the accelerator integration. Additional common techniques, which allow for the utilization of multiple CPU cores or memory management on the host code, are not part of this discussion. For more information, see the _SDAccel Profiling and Optimization Guide_ ([UG1207](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1207-sdaccel-optimization-guide.pdf)).
+>**NOTE:** The host code optimization techniques shown in this tutorial are limited to aspects for optimizing the accelerator integration. Additional common techniques, which allow for the usage of multiple CPU cores or memory management on the host code, are not part of this discussion. For more information, refer to the _SDAccel Profiling and Optimization Guide_ ([UG1207](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/zgr1534452172723.html)).
 
 The following sections focus on the following specific host code optimization concerns:
-* Software Pipelining / Event Queue
+
+* Software Pipelining/Event Queue
 * Kernel and Host Code Synchronization
 * Buffer Size
 
-## Model
+# Before You Begin
 
-The kernel used in this example is created solely for the purpose of host code optimization. It is designed to be static throughout this tutorial, which allows you to see the effects of your optimizations on the host code.  
+This tutorial uses:
+
+* BASH Linux shell commands
+* 2019.1 SDx release and the *xilinx_u200_xdma_201830_1* platform.  
+If necessary, it can be easily ported to other versions and platforms.
+
+>**IMPORTANT:**  
+>
+> * Before running any of the examples, make sure you have installed Xilinx Runtime (XRT) and the SDAccel development environment as described in the *SDAccel Development Environment Release Notes, Installation, and Licensing Guide* ([UG1238)](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html).
+>* If you run applications on the Alveo™  card, ensure the card and software drivers have been correctly installed by following the instructions in the *Getting Started with Alveo Data Center Accelerator Cards Guide* ([UG1301](https://www.xilinx.com/support/documentation/boards_and_kits/accelerator-cards/ug1301-getting-started-guide-alveo-accelerator-cards.pdf)).
+
+## Accessing the Tutorial Reference Files
+
+1. To access the reference files, type the following into a terminal: `git clone https://github.com/Xilinx/SDAccel-Tutorials`.
+2. Navigate to `SDAccel-Tutorials-master/docs/host-code-opt/reference-files`.
+
+# Model
+
+In this example, the kernel is created solely for the purpose of host code optimization. It is designed to be static throughout this tutorial, which allows you to see the effects of your optimizations on the host code.  
 <!--this could be better suited as a table-->
 
-The C++ kernel has one input and one output port. These ports are 512 bits wide to optimally utilize the AXI bandwidth. The number of elements consumed by kernel per execution is configurable through the `numInputs` parameter. Similarly, the `processDelay` parameter can be used to alter the latency of the kernel. The algorithm increments the input value by the value for `ProcessDelay`. However, this increment is implemented by a loop executing `processDelay` times incrementing the input value by one each time. Because this loop is present within the kernel implementation, each iteration will end up requiring a constant amount of cycles, which can be multiplied by the `processDelay` number.
+The C++ kernel has one input and one output port. These ports are 512-bits wide to optimally use the AXI bandwidth. The number of elements consumed by kernel per execution is configurable through the `numInputs` parameter. Similarly, the `processDelay` parameter can be used to alter the latency of the kernel. The algorithm increments the input value by the value for `ProcessDelay`. However, this increment is implemented by a loop executing `processDelay` times incrementing the input value by one each time. Because this loop is present within the kernel implementation, each iteration will end up requiring a constant amount of cycles, which can be multiplied by the `processDelay` number.
 
 The kernel is also designed to enable AXI burst transfers. The kernel contains a read and a write process, executed in parallel with the actual kernel algorithm (`exec`) towards the end of the process.
-The read and the write process initiates the AXI transactions in a simple loop and writes the received values into internal FIFOs, or reads from internal FIFOs and writes to the AXI outputs. The Vivado high-level synthesis (HLS) implements these blocks as concurrent parallel processes, since the DATAFLOW pragma was set on the surrounding `pass_dataflow` function.
+The read and the write process initiates the AXI transactions in a simple loop and writes the received values into internal FIFOs, or reads from internal FIFOs and writes to the AXI outputs. The SDAccel compiler implements these blocks as concurrent parallel processes, because the DATAFLOW pragma was set on the surrounding `pass_dataflow` function.
 
-## Building the Kernel
->**NOTE**: All instructions in this tutorial are intended to be run from the `reference-files` directory.
+# Building the Kernel
 
-Although some host code optimizations perform well with the hardware emulation, accurate run-time information and running of large test vectors will require the kernel to be executed on the actual system. Generally, the kernel is not expected to change during host code optimization; this is a one-time hit, and it can easily be performed before the hardware model is finalized.
+>**NOTE**: In this tutorial, run all instructions from the `reference-files` directory.
 
-For this tutorial, an example kernel was set up to build the hardware bitstream one time by issuing the following commands:<!--ThomasB: Would be nice to add the specific string for U200 as an example.-->
+Although some host code optimizations perform well with the hardware emulation, accurate runtime information and the running of large test vectors will require the kernel to be executed on the actual accelerator card hardware. Generally, the kernel is not expected to change during host code optimization, so the kernel only needs to be compiled to hardware once for this tutorial.
+
+Run the following Makefile command to compile the kernel to the specified accelerator card.
+
 ```
-make TARGET=hw DEVICE=<device> kernel
+make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 kernel
 ```
-Replace `device` with the device file (`.xpfm`) for the Xilinx® acceleration card you have installed.  
->**NOTE**: This build process will take several hours, and the kernel compilation must be completed before you can analyze the host code impact.
 
-## Host Code
+>**NOTE:** This build process takes several hours, but the kernel compilation must be completed before you can analyze the impact of optimizations on the host code performance.
 
-Before examining different implementation options for the host code, view the structure of the code. The host code file is designed to let you focus on the key aspects of host code optimization. Three classes are provided through header files in the common source directory (`srcCommon`):
+# Host Code
 
-* `srcCommon/AlignedAllocator.h`: `AlignedAllocator` is a small struct with two methods. This struct is provided as a helper class to support memory-aligned allocation for the test vectors. Memory-aligned blocks of data can be transferred much more rapidly, and the OpenCL™ library will create warnings if the data transmitted is not memory-aligned.
+Before examining different implementation options for the host code, view the structure of the code. The host code file is designed to let you focus on the key aspects of host code optimization.
 
-* `srcCommon/ApiHandle.h`: This class encapsulates the main OpenCL objects:
-  * the context
+The following three classes are provided through header files in the common source directory (`srcCommon`):
+
+* `srcCommon/AlignedAllocator.h`: `AlignedAllocator` is a small struct with two methods. This struct is provided as a helper class to support memory-aligned allocation for the test vectors. Memory-aligned blocks of data can be transferred much more rapidly, and the OpenCL™ API library will create warnings if the data transmitted is not memory-aligned.
+
+* `srcCommon/ApiHandle.h`: This class encapsulates the main OpenCL API objects:
+  * context
   * program
   * `device_id`
-  * the execution kernel
-  * `command_queue`  
-These structures are populated by the constructor, which steps through the default sequence of OpenCL function calls. There are only two configuration parameters to the constructor:
-      * A string containing the name of the bitstream (`xclbin`) to be used to program the FPGA.
-      * A boolean to determine if an out-of-order queue or a sequential execution queue should be created.
+  * execution kernel
+  * `command_queue`
+  
+   These structures are populated by the constructor, which steps through the default sequence of OpenCL API function calls. There are only two configuration parameters to the constructor:
+  * A string containing the name of the bitstream (xclbin) to be used to program the FPGA.
+  * A boolean to determine if an out-of-order queue or a sequential execution queue should be created.
 
-  The class provides accessory functions to the queue, context, and kernel required for the generation of buffers and the scheduling of tasks on the accelerator. The class also automatically releases the allocated OpenCL objects when the `ApiHandle` destructor is called.
+  The class provides accessory functions to the queue, context, and kernel required for the generation of buffers and the scheduling of tasks on the accelerator. The class also automatically releases the allocated OpenCL API objects when the `ApiHandle` destructor is called.
 
 * `srcCommon/Task.h`: An object of class `Task` represents a single instance of the workload to be executed on the accelerator. Whenever an object of this class is constructed, the input and output vectors are allocated and initialized based on the buffer size to be transferred per task invocation. Similarly, the destructor will de-allocate any object generated during the task execution.
->**NOTE**:This encapsulation of a single workload for the invocation of a module allows this class to _also_ contain an output validator function (`outputOk`).
+  >**NOTE:** This encapsulation of a single workload for the invocation of a module allows this class to _also_ contain an output validator function (`outputOk`).
 
    The constructor for this class contains two parameters:
-    * `bufferSize`: Determines how many 512 bit values are transferred when this task is executed.
-    * `processDelay`: Provides the similarly-named kernel parameter, and it is also used during validation.
+  * `bufferSize`: Determines how many 512-bit values are transferred when this task is executed.
+  * `processDelay`: Provides the similarly-named kernel parameter, and it is also used during validation.
 
-  The most important member function of this class is the `run`-function. This function enqueues OpenCL with three different steps for executing the algorithm:
-    1. Writing data to the FPGA accelerator
-    2. Setting up the kernel and running the accelerator
-    3. Reading the data back from the DDR memory on the FPGA
+  The most important member function of this class is the `run` function. This function enqueues three different steps for executing the algorithm:
+  1. Writing data to the FPGA accelerator
+  2. Setting up the kernel and running the accelerator
+  3. Reading the data back from the FPGA accelerator
 
-  To perform this task, buffers are allocated on the DDR for the communication. Additionally, events are used to express the dependency between the different task (write before execute before read).
+  To perform these operations, buffers are allocated on the DDR for the communication. Additionally, events are used to establish a dependency between the different commands (write before execute before read).
 
-In addition to the ApiHandle object, the `run`-function has one conditional argument. This argument allows a task to be dependent on a previously-generated event. This allows the host code to establish task order dependencies, as illustrated later in this tutorial.
+  In addition to the ApiHandle object, the `run` function has one conditional argument. This argument allows a task to be dependent on a previously-generated event. This allows the host code to establish task order dependencies, as illustrated later in this tutorial.
 
-None of the code in any of these header files will be modified during this tutorial. All key concepts will be shown in the different `host.cpp` files, as found in:
-* `srcBuf`
-* `srcPipeline`
-* `srcSync`
+  None of the code in any of these header files is modified during this tutorial. All key concepts will be shown in the different `host.cpp` files, as found in:
 
-However, even the main function in the `host.cpp` file follows a specific structure, which is described in the following section.
+  * `srcBuf`
+  * `srcPipeline`
+  * `srcSync`
 
-### host.cpp Main Functions
+  However, even the main function in the `host.cpp` file follows a specific structure described in the following section.
+
+## host.cpp Main Functions
+
 The main function contains the following sections marked in the source accordingly.
 
-1. Environment / Usage Check
-2. Common Parameters:
+1. **Environment / Usage Check**
+2. **Common Parameters**:
    * `numBuffers`: Not expected to be modified. This parameter is used to determine how many kernel invocations are performed.
-   * `oooQueue`: If true, this boolean value is used to declare the kind of OpenCL eventqueue that is generated inside of the ApiHandle.
-   * `processDelay`: This parameter can be used to artificially delay the computation time required by the kernel. This parameter will not be utilized in this version of the tutorial.
-   * `bufferSize`: This parameter is used to declare the number of 512 bit values to be transferred per kernel invocation.
+   * `oooQueue`: If true, this boolean value is used to declare the kind of OpenCL event queue that is generated inside the ApiHandle.
+   * `processDelay`: This parameter can be used to artificially delay the computation time required by the kernel. This parameter is not used in this version of the tutorial.
+   * `bufferSize`: This parameter is used to declare the number of 512-bit values to be transferred per kernel invocation.
    * `softwarePipelineInterval`: This parameter is used to determine how many operations are allowed to be prescheduled before synchronization occurs.
-3. Setup: To ensure that you are aware of the status of configuration variables, this section will print out the final configuration.
-4. Execution: In this section, you will be able to model several different host code performance issues. These are the lines you will focus on for this tutorial.
-5. Testing: After execution has completed, this section performs a simple check on the output.
-6. Performance Statistics: If the model is run on an actual accelerator card (not emulated), the host code will calculate and print the performance statistics based on system time measurements.
+3. **Setup**: To ensure that you are aware of the status of configuration variables, this section will print out the final configuration.
+4. **Execution**: In this section, you will be able to model several different host code performance issues. These are the lines you will focus on for this tutorial.
+5. **Testing**: After execution has completed, this section performs a simple check on the output.
+6. **Performance Statistics**: If the model is run on an actual accelerator card (not emulated), the host code will calculate and print the performance statistics based on system time measurements.
 
->**NOTE:** The setup, as well as the other sections, can print additional messages recording the system status, as well as overall `PASS` or `FAIL` of the run.
+  >**NOTE:** The setup, as well as the other sections, can print additional messages recording the system status, as well as overall `PASS` or `FAIL` of the run.
 
-### Pipelined Kernel Execution Using Out of Order Event Queue
+## Pipelined Kernel Execution Using Out of Order Event Queue
 
 In this first exercise, you will look at pipelined kernel execution.
->**NOTE:** You are dealing with a single compute unit (instance of a kernel), as a result at each point, only a single kernel can actually run in the hardware. However, as described above, the run of a kernel also requires the transmission of data to and from the compute unit. These activities should be overlapped to minimize the idle-time of the kernel working with the host application.
+  >**NOTE:** You are dealing with a single compute unit (CU) (instance of a kernel); as a result, only a single kernel can actually run in the hardware. However, as previously described, the run of a kernel also requires the transmission of data to and from the CU. These activities should be pipelined to minimize the idle-time of the kernel working with the host application.
 
-Start by compiling and running host code (`srcPipeline/host.cpp`):
+1. Start by compiling and running the host code (`srcPipeline/host.cpp`) using the following command.
 
-```
-make TARGET=hw DEVICE=<device> pipeline
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 pipeline
+   ```
 
-Again, ``<device>`` should be replaced by the actual device file (`.xpfm`) for your available accelerator card. Compared to the kernel compilation time, this will seem like an instantaneous action.
+   Compared to the kernel compilation time, this build step takes very little time.
 
-Look at the execution loop in the host code:
+   In the host code, look at the execution loop starting at line 55.
 
-```
-  // -- Execution -----------------------------------------------------------
+   ```cpp
+    // -- Execution -----------------------------------------------------------
 
-  for(unsigned int i=0; i < numBuffers; i++) {
-    tasks[i].run(api);
-  }
-  clFinish(api.getQueue());
-```
-<!--ThomasB: Formatting should be cpp, not bash-->
-In this case, the code schedules all the buffers and lets them execute. Only at the end does it actually synchronize and wait for completion.
+    for(unsigned int i=0; i < numBuffers; i++) {
+      tasks[i].run(api);
+    }
+    clFinish(api.getQueue());
+     ```
 
-After the build has completed, you can run the host executable using the following command:
+   In this case, the code schedules all the buffers and lets them execute. Only at the end does it actually synchronize and wait for completion.
 
-```
-make TARGET=hw DEVICE=<device> pipelineRun
-```
+2. After the build has completed, run the host executable using the following command.
 
-This script is set up to run the application, and then spawn the SDaccel GUI. The GUI will automatically be populated with the collected run-time data.
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 pipelineRun
+   ```
 
-The run-time data is generated by using the `sdaccel.ini` file, which includes the following contents:
+   This script is set up to run the application, and then spawn the GUI. The GUI will automatically be populated with the collected run-time data.
 
-```
-[Debug]
-profile=true
-timeline_trace=true
-data_transfer_trace=coarse
-stall_trace=all
-```
+   The runtime data is generated by the host program due to settings specified in the `xrt.ini` file, which includes the following contents.
 
-Details of the `sdaccel.ini` file can be found in the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_2/ug1023-sdaccel-user-guide.pdf)).
+   ```
+   [Debug]
+   profile=true
+   timeline_trace=true
+   data_transfer_trace=coarse
+   stall_trace=all
+   ```
 
-The Application Timeline viewer illustrates the full run of the executable. The three main sections of the timeline are:
-* OpenCL API Calls
-* Data Transfer section
-* Kernel Enqueues
+   For details about the `xrt.ini` file, refer to the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
 
-Zoom in on the section illustrating the actual accelerator execution, and select one of the kernel enqueues to see an image similar to the following:
+   The Application Timeline view illustrates the full run of the executable. The three main sections of the timeline are:
+
+   * OpenCL API Calls
+   * Data Transfer
+   * Kernel Enqueues
+
+3. Zoom in on the section illustrating the actual accelerator execution, and select one of the kernel enqueues to see an image similar to the following figure.
 ![](images/OrderedQueue.PNG)
-
 The blue arrows identify dependencies, and you can see that every Write/Execute/Read task execution has a dependency on the previous Write/Execute/Read operation set. This effectively serializes the execution.
 
-Looking back at the execution loop in the host code, no dependency is specified between the Write/Execute/Read runs. Each call to **run** on a specific task only has a dependency on the apiHandle, and is otherwise fully encapsulated.
+   In this case, the dependency is created by using an ordered queue. In the parameter section as shown at line 27 of the `host.cpp`, the `oooQueue` parameter is set to `false`.
 
-In this case, the dependency is created by using an ordered queue. In the parameter section, the `oooQueue` parameter is set to `false`:<!--ThomasB: Formatting should be cpp, not bash-->
+   ```cpp
+    bool         oooQueue                 = false;
+   ```
 
-```
-  bool         oooQueue                 = false;
-```
+   You can break this dependency by changing the out-of-order parameter to `true`.
 
-You can break this dependency by changing the out-of-order parameter to `true`:<!--ThomasB: Formatting should be cpp, not bash-->
+   ```cpp
+    bool         oooQueue                 = true;
+   ```
 
-```
-  bool         oooQueue                 = true;
-```
+4. Recompile and execute.
 
-Recompile and execute:
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 pipeline
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 pipelineRun
+   ```
 
-```
-make TARGET=hw DEVICE=<device> pipeline
-make TARGET=hw DEVICE=<device> pipelineRun
-```
-
-Zooming in on the Application Timeline and clicking any kernel enqueue results in similar to the following figure:
-
+   If you zoom in on the Application Timeline, and click any kernel enqueue, you should see results similar to the following figure.
 ![](images/OutOfOrderQueue.PNG)
 
-If you select other pass kernel enqueues, you will see that all 10 of them are now showing dependencies only within the Write/Execute/Read group. This allows the read and write operations to overlap with the execution, and you are effectively pipelining the software write, execute, and read. This can considerably improve overall performance because the communication overhead is happening concurrently with the execution of the accelerator.
-
+   If you select other pass kernel enqueues, you will see that all 10 are now showing dependencies only within the Write/Execute/Read group. This allows the read and write operations to overlap with the execution, and you are effectively pipelining the software write, execute, and read. This can considerably improve overall performance because the communication overhead is happening concurrently with the execution of the accelerator.
 
 ## Kernel and Host Code Synchronization
 
-For this step, look at the source code in `srcSync` (`srcSync/host.cpp`), and examine the execution loop. This is the same as in the previous section of the tutorial:<!--ThomasB: Formatting should be cpp, not bash-->
+For this step, look at the source code in `srcSync` (`srcSync/host.cpp`), and examine the execution loop (line 55). This is the same as in the previous section of this tutorial.
 
-```
+```cpp
   // -- Execution -----------------------------------------------------------
 
   for(unsigned int i=0; i < numBuffers; i++) {
@@ -203,148 +228,155 @@ For this step, look at the source code in `srcSync` (`srcSync/host.cpp`), and ex
   clFinish(api.getQueue());
 ```
 
-In this example, the code implements a free-running pipeline. No synchronization is performed until the end, when a call to `clFinish` is performed on the event queue. While this creates an effective pipeline, this implementation has an issue related to buffer allocation, as well as, execution order.
+In this example, the code implements a free-running pipeline. No synchronization is performed until the end, when a call to `clFinish` is performed on the event queue. While this creates an effective pipeline, this implementation has an issue related to buffer allocation, as well as, execution order. This is because it is only possible to release buffers after they are no longer needed, which implies a synchronization point.
 
-For example, there could be issues if the `numBuffer` variable is increased to a large number or if it is an unknown number (as would be the case when processing a video stream). In these cases, buffer allocation and memory usage can become problematic. In this example, the host memory is pre-allocated and shared with the FPGA, such that this example will probably run out of memory.
+For example, there could be issues if the numBuffer variable is increased to a large number, as would be the case when processing a video stream. In this case, buffer allocation and memory usage can become problematic, because the host memory is pre-allocated and shared with the FPGA. In such a case, this example will probably run out of memory.
 
 Similarly, as each of the calls to execute the accelerator are independent and un-synchronized (out-of-order queue), it is likely that the order of execution between the different invocations is not aligned with the enqueue order. As a result, if the host code is waiting for a specific block to be finished, this might not occur until much later than expected. This effectively disables any host code parallelism while the accelerator is operating.
 
-To alleviate these issues, OpenCL provides two methods of synchronization:
-* `clFinish`call
+To alleviate these issues, the OpenCL framework provides two methods of synchronization:
+
+* `clFinish` call
 * `clWaitForEvents` call
 
-First, look at using the `clFinish` call. To illustrate the behavior, you must modify the execution loop, as follows:<!--ThomasB: Formatting should be cpp, not bash-->
+1. First, look at using the `clFinish` call. To illustrate the behavior, make the following modifications to the execution loop.
 
-```
-  // -- Execution -----------------------------------------------------------
+     ```cpp
+     // -- Execution -----------------------------------------------------------
 
-  int count = 0;
-  for(unsigned int i=0; i < numBuffers; i++) {
-    count++;
-    tasks[i].run(api);
-    if(count == 3) {
-	  count = 0;
-	  clFinish(api.getQueue());
-    }
-  }
-  clFinish(api.getQueue());
-```
+     int count = 0;
+     for(unsigned int i=0; i < numBuffers; i++) {
+       count++;
+       tasks[i].run(api);
+       if(count == 3) {
+         count = 0;
+         clFinish(api.getQueue());
+       }
+     }
+     clFinish(api.getQueue());
+   ```
 
-Recompile and execute:
+2. Recompile and execute.
 
-```
-make TARGET=hw DEVICE=<device> sync
-make TARGET=hw DEVICE=<device> syncRun
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 sync
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 syncRun
+   ```
 
-If you zoom into Application Timeline, an image is displayed similar to the following:
+   If you zoom in on the Application Timeline, an image is displayed similar to the following figure.
 ![](images/clFinish.PNG)
 
-The key elements in this figure are the red box named `clFinish`, and the larger gap between the kernel enqueues every three invocations of the accelerator.
+   In the figure, the key elements are the red box named `clFinish`, and the larger gap between the kernel enqueues every three invocations of the accelerator.
 
-The call to `clFinish` creates a synchronization point on the complete OpenCL command queue. This implies that all commands enqueued onto the given queue will have to be completed before `clFinish` returns control to the host program. As a result, all activities (including the buffer communication) will have to be completed before the next set of 3 accelerator invocations can resume. This is effectively a barrier synchronization.
+   The call to `clFinish` creates a synchronization point on the complete OpenCL command queue. This implies that all commands enqueued onto the given queue will have to be completed before `clFinish` returns control to the host program. As a result, all activities,including the buffer communication, meed to be completed before the next set of three accelerator invocations can resume. This is effectively a barrier synchronization.
 
-While this enables a synchronization point where buffers can be released and all processes are guaranteed to have completed, it also prevents overlap at the synchronization point.
+   While this enables a synchronization point where buffers can be released and all processes are guaranteed to have completed, it also prevents overlap at the synchronization point.
 
-Look at an alternative synchronization scheme, where the synchronization is performed based on the completion of a previous execution of a call to the accelerator. Edit the `host.cpp` file to change the execution loop, as follows:
+3. Look at an alternative synchronization scheme, where the synchronization is performed based on the completion of a previous execution of a call to the accelerator. Edit the `host.cpp` file to change the execution loop as follows.
 
-```
-  // -- Execution -----------------------------------------------------------
+   ```cpp
+     // -- Execution -----------------------------------------------------------
 
-  for(unsigned int i=0; i < numBuffers; i++) {
-    if(i < 3) {
-      tasks[i].run(api);
-	} else {
-	  tasks[i].run(api, tasks[i-3].getDoneEv());
-    }
-  }
-  clFinish(api.getQueue());
-```
+     for(unsigned int i=0; i < numBuffers; i++) {
+       if(i < 3) {
+         tasks[i].run(api);
+       } else {
+         tasks[i].run(api, tasks[i-3].getDoneEv());
+       }
+     }
+     clFinish(api.getQueue());
+   ```
 
-Recompile and execute:
+4. Recompile and execute.
 
-```
-make TARGET=hw DEVICE=<device> sync
-make TARGET=hw DEVICE=<device> syncRun
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 sync
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 syncRun
+   ```
 
-If you zoom into the Application Timeline, an image is displayed similar to the following:
+   If you zoom into the Application Timeline, an image is displayed similar to the following figure.
 ![](images/clEventSync.PNG)
 
-In the later part of the timeline, there are five executions of pass executed without any unnecessary gaps. However, even more telling are the data transfers at the point of the marker. At this point, three packages were sent over to be processed by the accelerator, and one was already received back. Because you have synchronized the next scheduling of Write/Execute/Read on the completion of the first accelerator invocation, you now observe another write operation before any other package is received. This clearly identifies overlapping execution.
+   In the later part of the timeline, there are five executions of pass executed without any unnecessary gaps. However, even more telling are the data transfers at the point of the marker. At this point, three packages were sent over to be processed by the accelerator, and one was already received back. Because you have synchronized the next scheduling of Write/Execute/Read on the completion of the first accelerator invocation, you now observe another write operation before the third pass has even completed. This clearly identifies overlapping execution.
 
-In this case, you synchronized the full next accelerator execution on the completion of the execution scheduled three invocations earlier by using the following event synchronization in the `run` method of the class task:<!--ThomasB: Formatting should be cpp, not bash-->
+   In this case, you synchronized the full next accelerator execution on the completion of the execution scheduled three invocations earlier by using the following event synchronization in the `run` method of the class task.
 
-```
-    if(prevEvent != nullptr) {
-      clEnqueueMigrateMemObjects(api.getQueue(), 1, &m_inBuffer[0],
-				 0, 1, prevEvent, &m_inEv);
-    } else {
-      clEnqueueMigrateMemObjects(api.getQueue(), 1, &m_inBuffer[0],
-				 0, 0, nullptr, &m_inEv);
-    }
-```
+   ```cpp
+       if(prevEvent != nullptr) {
+         clEnqueueMigrateMemObjects(api.getQueue(), 1, &m_inBuffer[0],
+                                   0, 1, prevEvent, &m_inEv);
+      } else {
+        clEnqueueMigrateMemObjects(api.getQueue(), 1, &m_inBuffer[0],
+                                   0, 0, nullptr, &m_inEv);
+       }
+   ```
 
-While this is the common synchronization scheme between enqueued objects in OpenCL, it is possible to alternatively synchronize the host code by calling:<!--ThomasB: Formatting should be cpp, not bash-->
+   While this is the common synchronization scheme between enqueued objects in OpenCL, you can alternatively synchronize the host code by calling the following.
 
-```
-  clWaitForEvents(1,prevEvent);
-```
+   ```cpp
+     clWaitForEvents(1,prevEvent);
+   ```
 
-This allows for additional host code computation while the accelerator is operating on earlier enqueued tasks. This is not further explored here, but rather, left to the reader as an additional exercise.  
+   This allows for additional host code computation while the accelerator is operating on earlier enqueued tasks. This is not explored further here, but rather left to you as an additional exercise.
 
+   >**NOTE:** Because this synchronization scheme allows the host code to operate after the completion of an event, it is possible to code up a buffer management scheme. This will avoid running out of memory for long running applications.  
 
 ## OpenCL API Buffer Size
 
-In this last section of this tutorial, you will investigate buffer size impact on total performance. Towards that end, you will focus on the host code in `srcBuf/host.cpp`. The execution loop is exactly the same as the end of the previous section.
+In this last section of this tutorial, you will investigate buffer size impact on total performance. Towards that end, you will focus on the host code in `srcBuf/host.cpp`. The execution loop is exactly the same as in the end of the previous section.
 
-However, in this host code file, the number of tasks to be processed has increased to 100. The goal of this change is to get 100 accelerator call to be transferring 100 buffers and reading 100 buffers. This enables the tool to get a more accurate average throughput estimate per transfer.
+However, in this host code file, the number of tasks to be processed has increased to 100. The goal of this change is to get 100 accelerator calls to be transferring 100 buffers and reading 100 buffers. This enables the tool to get a more accurate average throughput estimate per transfer.
 
-In addition, a second command line option (`SIZE=`) has been added to specify the buffer size for a specific run. The actual buffer size to be transferred during a single write or read is determined by calculating 2 to the power of the specified argument (`pow(2, argument)`) multiplied by 512 bits.
+In addition, a second command line option (`SIZE=`) has been added to specify the buffer size for a specific run. The actual buffer size to be transferred during a single write or read is determined by calculating 2 to the power of the specified argument (`pow(2, argument)`) multiplied by 512-bits.
 
-You can compile the host code by calling:
+1. Compile the host code.
 
-```
-make TARGET=hw DEVICE=<device> buf
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 buf
+   ```
 
-Run the executable with the following command:
+2. Run the executable.
 
-```
-make TARGET=hw DEVICE=<device> SIZE=14 bufRun
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 SIZE=14 bufRun
+   ```
 
-The argument `SIZE` is used as a second argument to the host code executable pass.
->**NOTE**: If `SIZE` is not included, it is set to `SIZE=14` by default. This allows the code to execute the implementation with different buffer sizes and measure throughput by monitoring the total compute time. This number is calculated in the Testbench and reported via the FPGA Throughput output.
+   The argument `SIZE` is used as a second argument to the host executable.
+   >**NOTE**: If `SIZE` is not included, by default, it is set to `SIZE=14`. This allows the code to execute the implementation with different buffer sizes and measure throughput by monitoring the total compute time. This number is calculated in the test bench and reported through the FPGA Throughput output.
 
-To ease this sweeping of the different buffer sizes, an additional Makefile goal was created, and it can be executed through the following command:
+   To ease the sweeping of the different buffer sizes, an additional makefile target was created, executed through the following command.
 
-```
-make TARGET=hw DEVICE=<device> bufRunSweep
-```
+   ```
+   make TARGET=hw DEVICE=xilinx_u200_xdma_201830_1 bufRunSweep
+   ```
 
->**NOTE**: The sweeping script (`auxFiles/run.py`) requires a python installation, which is available in most systems. Executing the sweep will run and record the FPGA Throughput for buffer size arguments of 8 to 19. The measured throughput values are recorded together with the actual number of bytes per transfer in the `runBuf/results.csv` file, which is printed at the end of the makefile execution.
+   >**NOTE**: The sweeping script (`auxFiles/run.py`) requires a python installation, which is available in most systems. Executing the sweep will run and record the FPGA Throughput for buffer size arguments of 8 to 19. The measured throughput values are recorded together with the actual number of bytes per transfer in the `runBuf/results.csv` file, which is printed at the end of the makefile execution.
 
-When analyzing these numbers, a step function similar to the following image should be observable:  
+   When analyzing these numbers, a step function similar to the following image should be observable.  
 ![](images/stepFunc.PNG)
 
-This image shows that the buffer size clearly impacts performance and starts to level out around 2 MB.
->**NOTE**: This image is created via gnuplot from the `results.csv` file, and if it is found on your system, it will be displayed automatically after you run the sweep.
+   This image shows that the buffer size (x-axis, bytes per transfer) clearly impacts performance (y-axis, FPGA Throughput in MB/s), and starts to level out around 2 MB.
+   >**NOTE**: This image is created through gnuplot from the `results.csv` file, and if found on your system, it will be displayed automatically after you run the sweep.
 
 Concerning host code performance, this step function identifies a relationship between buffer size and total execution speed. As shown in this example, it is easy to take an algorithm and alter the buffer size when the default implementation is based on a small amount of input data. It does not have to be dynamic and runtime-deterministic, as performed here, but the principle remains the same. Instead of transmitting a single value set for one invocation of the algorithm, you would transmit multiple input values and repeat the algorithm execution on a single invocation of the accelerator.
 
-## Conclusion
+# Conclusion
 
 This tutorial illustrated three specific areas of host code optimization:
-   * Pipelined Kernel Execution using an Out of Order Event Queue
-   * Kernel and Host Code Synchronization
-   * OpenCL API Buffer Size
 
-You should consider these areas when trying to create an efficient acceleration implementation. The tutorial showed how these performance bottlenecks can be analyzed, and shows one way of how they can be improved.
+* Pipelined Kernel Execution using an Out-of-Order Event Queue
+* Kernel and Host Code Synchronization
+* OpenCL API Buffer Size
+
+Consider these areas when trying to create an efficient acceleration implementation. The tutorial showed how these performance bottlenecks can be analyzed, and shows one way of how they can be improved.
 
 There are many ways to implement your host code and improve performance in general. This applies to improving host to accelerator performance, and other areas such as buffer management. This tutorial was not complete with respect to all aspects host code optimization.
 
-For more information about tools and processes you can use to analyze the application performance in general, see the _SDAccel Profiling and Optimization Guide_ ([UG1207](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1207-sdaccel-optimization-guide.pdf)).
+# Next Steps
 
+For more information about tools and processes you can use to analyze the application performance in general, refer to the _SDAccel Profiling and Optimization Guide_ ([UG1207](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/zgr1534452172723.html)).
+
+</br>
 <hr/>
+<p align= center><b><a href="/README.md">Return to Main Page</a></b></p>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

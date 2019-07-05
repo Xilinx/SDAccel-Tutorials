@@ -1,18 +1,24 @@
 <p align="right">
-Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>          
+<a>English</a> | <a href="/docs-jp/README.md">日本語</a>
 </p>
 
 <table width="100%">
   <tr width="100%">
-    <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.3 SDAccel™ Development Environment Tutorials</h1>
+    <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2019.1 SDAccel™ Development Environment Tutorials</h1>
     <a href="https://github.com/Xilinx/SDAccel-Tutorials/branches/all">See other versions</a>
     </td>
  </tr>
  </table>
 
-## Beginner
+## Getting Started
 
- <table style="width:100%">
+Learn how to [develop accelerated applications using SDAccel Development Tools](docs/sdaccel-getting-started/).
+
+[![Pathways](docs/sdaccel-getting-started/images/pathway.png)](docs/sdaccel-getting-started/)
+
+## Intermediate
+
+  <table style="width:100%">
  <tr>
  <td width="35%" align="center"><b>Tutorial</b>
  <td width="15%" align="center"><b>Kernel</b>
@@ -22,21 +28,6 @@ Read this page in other languages:<a href="/docs-jp/README.md">日本語</a>
  <td align="center"><a href="docs/getting-started-rtl-kernels/README.md">Getting Started with RTL Kernels</a></td>
  <td align="center">RTL</td>
  <td>This tutorial demonstrates how to use the SDAccel environment to program an RTL kernel into an FPGA and build a Hardware Emulation using a common development flow.</td>
- </tr>
-   <tr>
-   <td align="center"><a href="docs/getting-started-c-kernels/README.md">Getting Started with C/C++ Kernels</a></td>
-   <td align="center">C</td>
-   <td>This tutorial demonstrates building a basic OpenCL™-based design using the SDx™ development environment GUI and learning some of the features that enable you to do performance profiling and optimization.</td>
-   </tr>
-   </table>
-
-## Intermediate
-
-  <table style="width:100%">
- <tr>
- <td width="35%" align="center"><b>Tutorial</b>
- <td width="15%" align="center"><b>Kernel</b>
- <td width="50%" align="center"><b>Description</b>
  </tr>
  <tr>
  <td align="center"><a href="docs/mixing-c-rtl-kernels/README.md">Mixing C and RTL</a></td>
