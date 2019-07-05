@@ -1,148 +1,217 @@
 <table>
  <tr>
-   <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2018.3 SDAccel™ Development Environment Tutorials</h1>
+   <td align="center"><img src="https://www.xilinx.com/content/dam/xilinx/imgs/press/media-kits/corporate/xilinx-logo.png" width="30%"/><h1>2019.1 SDAccel™ Development Environment Tutorials</h1>
    <a href="https://github.com/Xilinx/SDAccel-Tutorials/branches/all">See other versions</a>
    </td>
  </tr>
  <tr>
- <td align="center"><h3>Using Multiple Compute Units</h3>
+ <td align="center"><h1>Using Multiple Compute Units</h1>
  </td>
  </tr>
 </table>
 
-## Introduction
+# Introduction
 
-This tutorial demonstrates a flexible kernel linking process to increase the number of kernel instances on an FPGA. Each specified instance of a kernel is also known as a compute unit (CU). This process improves the parallelism in a combined host-kernel system.
+This tutorial demonstrates a flexible kernel linking process to increase the number of kernel instances on an FPGA. Each specified instance of a kernel is also known as a compute unit (CU). This process of increasing number of CU improves the parallelism in a combined host-kernel system.
 
-## Background
+# Tutorial Overview
 
-By default, the SDAccel™ tool creates one hardware instance (also called a compute unit) for each kernel. A host program can use the same kernel multiple times for different sets of data. In these cases, it is useful to generate multiple compute units of the kernel to let those compute units run concurrently, and improve the performance of the overall system.  
+By default, the SDAccel™ tool creates one CU for each kernel. A host program can use the same kernel multiple times for different sets of data. In these cases, it is useful to generate multiple CUs of the kernel to let those CUs run concurrently, and improve the performance of the overall system.  
 
-For more information, see _Multiple Instances of a Kernel_ in the _SDAccel Environment Programmers Guide_ ([UG1277](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1277-sdaccel-programmers-guide.pdf)).
-
-<!-- We should provide some prerequisites for this tutorial, as well as some directions for accessing the lab materials either through cloning the repository or downloading a zip file from xilinx.com.-->
-
-## Description of the Tutorial Example
-
-This tutorial uses an image filter example to demonstrate the multiple compute units feature. The host application processes the image, extracts Y, U, and V planes, and then runs the kernel three times to filter each plane of an image. By default, these three kernels run sequentially, using the same hardware resources because the FPGA only contains a single hardware instance of the kernel. This tutorial demonstrates how to increase the number of compute units called by the host application to filter the Y, U, and V planes _concurrently_, instead.
-
-## Lessons
+For more information, see [Multiple Instances of a Kernel](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/pni1524163195211.html#yzb1524519238289) in the _SDAccel Environment Programmers Guide_ ([UG1277](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/vno1533881025717.html)).
 
 During this tutorial, you will:
-1. Create a new Application project and import source files.
-2. Run hardware emulation and inspect the emulation report to identify multiple serial kernel executions.
-3. Tweak the host code to enable out-of-order command executions.
-4. Alter the kernel linking process to create multiple instances of the same kernel.
-5. Re-run hardware emulation, and confirm parallel execution of the compute units.  
 
-## Tutorial Walkthrough
+1. Run hardware emulation and inspect the emulation report to identify multiple serial kernel executions.
+2. Change the host code to enable out-of-order command executions.
+3. Alter the kernel linking process to create multiple CUs of the same kernel.
+4. Re-run the hardware emulation, and confirm the parallel execution of the CUs.
 
-### Setting the Workspace
+This tutorial uses an image filter example to demonstrate the multiple CU feature. The host application processes the image, extracts Y, U, and V planes, and then runs the kernel three times to filter each plane of an image. By default, these three kernels run sequentially, using the same hardware resources because the FPGA only contains a single CU of the kernel. This tutorial demonstrates how to increase the number of CU, and then executing the kernel runs in parallel.
 
-1. Go to the example directory: `cd using-multiple-cu/reference-files/`
-2. Invoke the SDx™ environment GUI: `sdx`
-3. Specify a workspace, create a new application project, and then specify the project name as `filter2d`.
-4. Select `xilinx_u200_xdma_201830_1` as the platform.
-5. Keep **Empty Application** in the **Templates**, and click **Finish**.
+# Before You Begin
 
-The SDx tool will create and open your project in the specified workspace.
+This tutorial uses:
 
-### Configuring the design
+* BASH Linux shell commands
+* 2019.1 SDx release and the *xilinx_u200_xdma_201830_1* platform.
+If necessary, it can be easily extended to other versions and platforms.
 
-1. From the Project Explorer window, import host source files from the `src/host` directory, and select all the files.
-2. From the Project Explorer window, import the `Filter2DKernel.xo` kernel object file from the `src/kernel` directory.
->**NOTE**: The kernel code is already a compiled object file (.xo) to use in this tutorial. In fact, the `Filter2DKernel.xo` file may be generated from either C/C++ or RTL. They are essentially the same when starting from the compiled object code. You can still customize the linking process starting from the `.xo` file.
-3. In the main project window, select **Filter2DKernel** as a hardware function.
-4. Specify host code linker option:  
-The host code uses the OpenCV™ library for image file operation, so we need to specify related linker options.
-  1. In the Project Explorer window, right-click on the top-level folder of the `filter2d` project, and select  **C/C++ Build Settings**.
-  2. In the Settings dialog box, select the **SDX GCC Host Linker (x86_64)** tool settings.
-  3. At the top of the Settings dialog box, set the **Configuration** drop-down to **All Configuration** so that the linker options apply to all the flows.
-  4. In the Expert Settings: Command line pattern field, append the following text to the end of the current string:  
-```
+>**IMPORTANT:**
+>
+>* Before to running any of the examples, make sure you have installed Xilinx Runtime (XRT) and the SDAccel development environment as described in the *SDAccel Development Environment Release Notes, Installation, and Licensing Guide* ([UG1238)](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html).
+>* If you run applications on the Alveo™ card, ensure the card and software drivers have been correctly installed by following the instructions in the *Getting Started with Alveo Data Center Accelerator Cards Guide* ([UG1301](https://www.xilinx.com/support/documentation/boards_and_kits/accelerator-cards/ug1301-getting-started-guide-alveo-accelerator-cards.pdf)).
+
+## Accessing the Tutorial Reference Files
+
+1. To access the reference files, enter the following in a terminal: `git clone http://github.com/Xilinx/SDAccel-Tutorials`.
+2. Navigate to `SDAccel-Tutorials-master/docs/using-multiple-cu/reference-files`.
+
+# Makefile Flow
+
+You can observe the Makefile used for this tutorial in `using-multiple-cu/reference-files/Makefile`. The top level settings include:
+
+* **XOCC**: XOCC compiler path to compile the kernel code.
+* **EMCONFIGUTIL**: The path of the utility file that creates emulation configuration file, `emconfig.json`.
+* **DSA**: The target platform.
+* **NKERNEL**: The **kernel name:number of CUs** used in the XOCC compiler linker option, `--nk`.
+* **KERNEL_XO**: The kernel code is already a compiled object file (XO) to use in this tutorial. In fact, the `Filter2DKernel.xo` file can be generated from either C/C++ or RTL, which are essentially the same when starting from the compiled object code. You can still customize the linking process starting from the XO file.
+* **LFLAGS**: Note the linker option using OpenCV™ library for host code linker option.
+
+   ```
   -L${XILINX_SDX}/lnx64/tools/opencv -lopencv_core -lopencv_highgui -Wl,-rpath,${XILINX_SDX}/lnx64/tools/opencv
-```  
-  5. Select the **Apply and Close** button.  
+   ```  
 
-6. Set runtime arguments:  
-From the top Run Menu, set **Program arguments** with `-x ../binary_container_1.xclbin -i ../../../../img/test.bmp -n 1`.
+* **EXE_OPT**: The runtime options passed as command line arguments: Compiled kernel xclbin file, input image.
 
-### Run Hardware Emulation
+## Run Hardware Emulation
 
-Select **Emulation-HW** for **Active build configuration**, and run the hardware emulation by clicking the **Run** button: (![](./images/RunButton.PNG))
+Run hardware emulation with the following command.
 
-### Inspect the Host Code
+   ``` 
+   make check MODE=hw_emu
+   ```
 
-While the emulation run is going on, we will take a look at the host code. Open the file by expanding the `src` folder in the **Project Explorer** window, and double-clicking the `host.cpp` file.
+For hardware emulation (`hw_emu`), the kernel code is compiled into a hardware model, which is run in a
+hardware simulator, while the rest of the system uses a C simulator. Building and running takes longer but provides a detailed, cycle-aware, view of kernel activity. This target is useful for testing the functionality of the logic that will run in the FPGA and for getting initial performance estimates.
+>**NOTE:** For instructions on how to build the host software and hardware, refer to the [Building an Application](./BuildingAnApplication.md) lab.
 
-Scroll to lines 266-268, where you can see that the Filter function is called three times for Y, U, and V channels, respectively:  
-![](./images/host_file1.png)
+## Inspect the Host Code
 
-This function is described from line number 80. Here, you can see kernel arguments are set, and the kernel is executed by the `clEnqueueTask` command:  
-![](./images/host_file2.png)
+1. While the emulation run is executing, in another terminal, open the `src/host/host.cpp` file.
 
-All three `clEnqueueTask` commands are being enqueued using a single in-order command queue (line number 75). So, all the commands using this command queue will be executed sequentially in the order they are added to the queue.  
-![](./images/Command_queue.JPG)
+2. Inspect lines 255-257. You can see that the Filter function is called three times for the Y, U, and V channels, respectively.
 
-### Emulation Result
+   ```
+   request[xx*3+0] = Filter(coeff.data(), y_src.data(), width, height, stride, y_dst.data());
+   request[xx*3+1] = Filter(coeff.data(), u_src.data(), width, height, stride, u_dst.data());
+   request[xx*3+2] = Filter(coeff.data(), v_src.data(), width, height, stride, v_dst.data());
+   ```
 
-After the hardware emulation run is finished, click inside the Assistant window (bottom-left). Select **Emulation-HW**_>**filter2d-Default**. From here, you can see a couple of important reports, such as `Profile Summary` and `Application Timeline`.  
-![](./images/assistant_2.JPG)
+   This function is described from line 80. Here, you can see kernel arguments are set, and the kernel is executed by the `clEnqueueTask` command.
 
-1. Open the **Profile Summary** report by double-clicking on the item in the **Reports** window.  
-  * This report provides data related to how the application runs.
-  * Note that under **Top Kernel Execution**, the kernel is executed three times.
+   ```
+    // Set the kernel arguments
+    clSetKernelArg(mKernel, 0, sizeof(cl_mem),       &mSrcBuf[0]);
+    clSetKernelArg(mKernel, 1, sizeof(cl_mem),       &mSrcBuf[1]);
+    clSetKernelArg(mKernel, 2, sizeof(unsigned int), &width);
+    clSetKernelArg(mKernel, 3, sizeof(unsigned int), &height);
+    clSetKernelArg(mKernel, 4, sizeof(unsigned int), &stride);
+    clSetKernelArg(mKernel, 5, sizeof(cl_mem),       &mDstBuf[0]);
 
-2. Open the Application Timeline report from the **Emulation-HW** run.
-   * The Application Timeline report collects and displays host and device events on a common timeline to help you understand and visualize the overall health and performance of your systems.
-   * At the bottom of the timeline, you can see 3 blue bars: one for each kernel enqueing from the host. The host enqueues the kernel execution sequentially (in order) as it is using a single in-order command queue.
-   * Below the blue bars, you can see 3 green bars: one for each kernel execution. They are working on the FPGA sequentially.  
-   ![](./images/serial_kernel_enqueue.JPG)
+   // Schedule the writing of the inputs
+   clEnqueueMigrateMemObjects(mQueue, 2, mSrcBuf, 0, 0, nullptr,  &req->mEvent[0]);
 
+   // Schedule the execution of the kernel
+   clEnqueueTask(mQueue, mKernel, 1,  &req->mEvent[0], &req->mEvent[1]);
+   ```
 
-### Improving Host Code for Concurrent Kernel Enqueing
+   All three `clEnqueueTask` commands are being enqueued using a single in-order command queue (line 75). As a result, all the commands using this command queue are executed sequentially in the order they are added to the queue.
 
-Change the host code in line number 75 to declare the command queue as an _out-of-order_ command queue.
+   ```
+   Filter2DDispatcher(
+           cl_device_id     &Device,
+           cl_context       &Context,
+           cl_program       &Program )
+     {
+           mKernel  = clCreateKernel(Program, "Filter2DKernel", &mErr);
+           mQueue   = clCreateCommandQueue(Context, Device, CL_QUEUE_PROFI   LING_ENABLE, &mErr);
+           mContext = Context;
+           mCounter = 0;
+     }
+   ```
 
-Before the change:
+## Emulation Result
+
+1. First, review the generated Profile Summary report (`profile_summary.csv`).
+
+   Convert the Profile Summary report file to HTML format by executing the following command.
+
+   ```
+   sdx_analyze profile -i profile_summary.csv -f html
+   ```
+
+   * This report provides data related to how the application runs.
+   * Note that under "Top Kernel Execution", the kernel is executed three times.
+
+   >**NOTE:** The run directory contains a file named `sdaccel.ini`. This file contains runtime options that generate additional reports such as the Profile Summary report and Timeline Trace. 
+
+2. Next, review the Timeline Trace report (`timeline_trace.csv`). To view the report in the GUI, convert the file to a waveform database (WDB) format.
+
+   ```
+   sdx_analyze trace -i timeline_trace.csv
+   ```
+
+3. To run the SDx environment GUI, enter the following command.
+
+   ```
+   sdx -report timeline_trace.wdb
+   ```
+
+   The Application Timeline report collects and displays host and device events on a common timeline to help you understand and visualize the overall health and performance of your systems.
+   * At the bottom of the timeline, you can see three blue bars, one for each kernel enqueing from the host. The host enqueues the kernel execution sequentially (in order) as it is using a single in-order command queue.
+   * After the blue bars, you can see three green bars, one for each kernel execution. They are working on the FPGA sequentially.
+   ![Serial kernel enqueue](./images/serial_kernel_enqueue.JPG)
+
+## Improve the Host Code for Concurrent Kernel Enqueuing
+
+1. Change the `src/host/host.cpp` host file in line 75.  
+    This declares the command queue as an _out-of-order_ command queue.  
+
+   Code before the change:
+
+   ```
+   mQueue   = clCreateCommandQueue(Context, Device, CL_QUEUE_PROFILING_ENABLE, &mErr);
+   ```
+
+   Code after the change:
+
+   ```
+   mQueue   = clCreateCommandQueue(Context, Device, CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE, &mErr);
+   ```
+
+2. (*Optional*) Run the hardware emulation with the changed host code.
+
+   If you choose to run the Hardware Emulation feature, use the Timeline Trace to observe that using the out-of-order queue enables the kernels requested to be executed at almost the same time as one another (the blue bars represent kernel enqueue requests scheduled by the host).  
+
+   However, though the host scheduled all these executions concurrently, second and third execution requests are delayed as there is only one CU on the FPGA (the FPGA still executes the kernels sequentially).  
+![Sequential kernels](./images/sequential_kernels_2.JPG)  
+In the next step, you will increase the number of CU on the FPGA to allow three host kernel executions concurrently.
+
+## Increasing the Number of CUs
+
+Now, build the kernel xclbin again by altering the link step to generate three CUs of the same kernel.
+
+Open the Makefile, and change the NKERNEL setting. The NKERNEL variable is used in `--nk` switch of XOCC link stage.
+
 ```
-mQueue   = clCreateCommandQueue(Context, Device, CL_QUEUE_PROFILING_ENABLE, &mErr);
+NKERNEL := Filter2DKernel:3
 ```
 
-After the change:
-```
-mQueue   = clCreateCommandQueue(Context, Device, CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE, &mErr);
-```
-Save the file by pressing **CTRL**+**S**.  
->**Optional Step:** You can run hardware emulation with the changed host code. If you choose to run the Hardware Emulation feature, use the timeline trace to observe that using the out-of-order queue enables the kernels to be executed at almost the same time as one another.
+## Run Hardware Emulation and Inspect the Change
 
-However, though the host scheduled all these executions concurrently, some of the execution requests are delayed due to the limited kernel instances on the FPGA (the FPGA still executes the kernels sequentially).  
-![](./images/sequential_kernels_2.JPG)
+1. Regenerate the xclbin file. You need to do `make clean` and `make` to delete the existing xclbin with one CU and to create a new xclbin with three kernel CUs.
 
-In the next step, we will increase the number of kernel instances on the FPGA to allow three host kernel executions concurrently.
+   ```
+   make clean
+   make check MODE=hw_emu
+   ```
 
-Instead of using a single out-of-order queue, we can use multiple in-order queues to achieve the same concurrent command executions from the host code. For more information, refer to [this SDAccel Github Host code example](https://github.com/Xilinx/SDAccel_Examples/blob/master/getting_started/host/concurrent_kernel_execution_ocl/src/host.cpp) that shows both the single out-of-order command queue and multiple in-order command queues approaches.
+2. Convert the new `timeline_trace.csv` file to WBD format, and open it in the SDx environment GUI following the same steps as before.
 
-### Increasing the Number of Kernel Instances
+   ```
+   sdx_analyze trace -i timeline_trace.csv
+   sdx -report timeline_trace.wdb
+   ```
 
-Perform the following steps to increase the number of kernel instances to three:
-1. To return to SDx Project Settings, click the **Filter2D** tab.
-2. Locate the Hardware Functions section in the bottom half of the window.
-3. Increase the number of computer units from `1` to `3`.  
-![](./images/SetNumComputeUnits_2.PNG)
-
-### Running Hardware Emulation and inspect the change
-
-1. Run the hardware emulation the same way you previously ran it.
-2. After the run has finished, you can review the Profile Summary report.
-3. In the Application Timeline window, you can now see that the kernel executions overlap:  
+   You can now see that the application takes advantage of the three CUs created with the `--nk` switch, and that the kernel executions overlaps and executes in parallel, speeding up the overall application.
 ![](./images/overlapping_kernels_2.JPG)
+
+# Conclusion
 
 You have learned how to alter the kernel linking process to execute same kernel functions concurrently on an FPGA.
 
-## Optional Step
-
-This tutorial demonstrates the mechanism through hardware emulation. You can change the Active Build Configuration to **System**, and then click the **Run** button to compile and execute this on the actual FPGA board. After this run finishes, you can confirm the timeline trace report from the system run, as well.
-
+</br>
 <hr/>
+<p align= center><b><a href="/README.md">Return to Main Page</a></b></p>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

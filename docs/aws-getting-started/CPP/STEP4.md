@@ -9,22 +9,22 @@ Running and experimenting with these three examples of the C/OpenCL™ kernels a
 ### Loop Pipelining
 This example demonstrates how loop pipelining can be used to improve the performance of a kernel.
 
-[Download and run this example.](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_pipeline_ocl)
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_pipeline_ocl) from the SDAccel GitHub repository.
 
 ### Reordering Loops
 This example demonstrates how loop reordering can be used to improve the performance of a kernel.
 
-[Download and run this example.](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_reorder_c)
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_reorder_c) from the SDAccel GitHub repository.
 
 ### Loop Fusion
 This example demonstrates how to fuse two loops into one to improve the performance of an OpenCL kernel.
 
-[Download and run this example.](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_fusion_c)
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_fusion_c) from the SDAccel GitHub repository.
 
 ### Additional Examples
 The Xilinx Github repository contains more than 80 examples to help you learn. Browse the repository to find more examples of interest, starting with more coding and optimization examples.
 
-[Browse other OpenCL kernel coding and optimization examples.](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt)
+Browse other [OpenCL kernel coding and optimization examples](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt).
 
 <br>
 
