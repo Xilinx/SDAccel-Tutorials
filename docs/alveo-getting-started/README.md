@@ -35,14 +35,11 @@ For Alveo card installation, follow the instructions in the *Getting Started wit
 
 For developing application in-house, install the SDAccel environment software, by following the detailed installation procedures found in the *SDAccel Development Environment Release Notes and Installation Guide* ([UG1238](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html)).
 
-For developing applications for AWS, see one of the following tutorials:
-
-* [Getting Started on AWS F1 with SDAccel and C/C++ Kernels](/docs/aws-getting-started/CPP)
-* [Getting Started on AWS F1 with SDAccel and RTL Kernels](/docs/aws-getting-started/RTL)
+For developing applications for AWS, see the [AWS Getting Started]( https://github.com/Xilinx/TechDocs/tree/SDAccel-Tutorials-XDF-develop/docs/aws-getting-started) tutorial.
 
 ## Next Steps
 
-Understand the [Essential Concepts for Building and Running the Accelerated Application](/docs/Pathway3/) using the SDAccel™ development environment, including building a software application, building a hardware platform, performing emulation, viewing reports, and executing in hardware.
+Understand the [Essential Concepts for Building and Running the Accelerated Application](https://github.com/Xilinx/TechDocs/tree/SDAccel-Tutorials-XDF-develop/docs/Pathway3/Readme.md) using the SDAccel™ development environment, including building a software application, building a hardware platform, performing emulation, viewing reports, and executing in hardware.
 
 </br>
 <hr/>
