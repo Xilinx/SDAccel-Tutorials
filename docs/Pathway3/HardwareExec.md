@@ -22,7 +22,7 @@ In hardware execution, the host program runs on the host machine, and the kernel
 
 ## Before You Begin
 
-Review and run the [Building an Application](./BuildingAnApplication.md), [Running Emulation](./Emulation.md) and [Generating Profile and Timeline Trace Reports](./ProfileAndTraceReports.md) labs before running this lab. This lab uses the source files and options as in these previous labs, though all the necessary commands to build the host and hardware platform will be shown in this lab.
+Review and run the [Building an Application](./BuildingAnApplication.md), [Running Software and Hardware Emulation](./Emulation.md) and [Generating Profile and Timeline Trace Reports](./ProfileAndTraceReports.md) labs before running this lab. This lab uses the source files and options as in these previous labs, though all the necessary commands to build the host and hardware platform will be shown in this lab.
 
 ## Building the Design
 
@@ -86,7 +86,7 @@ The board status, compute unit status, and so on display. For more information a
 
 ## Next Steps
 
-You should have an understanding of the steps required for building and running an application in the SDAccel development environment. These include coding the software program and kernel, building the application, running software and hardware emulation, viewing reports, and running the application on an accelerator card. The next steps will be to use this understanding to [build your first program](https://github.com/Xilinx/TechDocs/blob/SDAccel-Tutorials-XDF-develop/docs/my-first-sdaccel-application/README.md).
+You should have an understanding of the steps required for building and running an application in the SDAccel development environment. These include coding the software program and kernel, building the application, running software and hardware emulation, viewing reports, and running the application on an accelerator card. The next steps will be to use this understanding to [build your first program](/docs/my-first-sdaccel-application).
 
 </br>
 <hr/>

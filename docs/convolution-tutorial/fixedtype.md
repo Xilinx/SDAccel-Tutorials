@@ -138,7 +138,7 @@ Here is the updated table. There is a 3.4x boost on kernel execution time perspe
 
 -----------------------------------------------------------------------------------
 
-[fixedtype_hwemu_profilesummary]: ./images/191_fixedtype_hwemu_pfsummary_new_2.JPG "Fixed-type data version hardware emulation profile summary"
+[fixedtype_hwemu_profilesummary]: ./images/191_fixedtype_hwemu_pfsummary_new_2.jpg "Fixed-type data version hardware emulation profile summary"
 
 ## Next Step
 

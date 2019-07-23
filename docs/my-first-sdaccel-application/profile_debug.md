@@ -133,7 +133,7 @@ The following figure shows the HLS report for the VADD example kernel.
 
 ## Optimization
 
-From the reports and images, you can see that there is a scope for improving the performance of the application. There are different optimization techniques which can be employed. For more information refer to the next step of the pathway, the [Methodology for Optimizing Accelerated FPGA Applications](../convolution-tutorial/README.md) tutorial.
+From the reports and images, you can see that there is a scope for improving the performance of the application. There are different optimization techniques which can be employed. For more information refer to the next step of the pathway, the [Methodology for Optimizing Accelerated FPGA Applications](../convolution-tutorial/) tutorial.
 
 ## Conclusion
 

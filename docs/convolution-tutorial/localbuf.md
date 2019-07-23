@@ -164,9 +164,9 @@ Now you have completed all the modifications, and you can run hardware emulation
 
 1. Go to the `Makefile` directory, and use the following command to run hardware emulation.
 
-```
-make run TARGET=hw_emu STEP=localbuf SOLUTION=1 NUM_FRAMES=1
-```
+   ```
+   make run TARGET=hw_emu STEP=localbuf SOLUTION=1 NUM_FRAMES=1
+   ```
 
 The following output is displayed.
 
@@ -182,21 +182,21 @@ convolve_fpga_1:m_axi_gmem2-DDR[0]          RD = 0.035 KB               WR = 0.0
 
 1. Use the following command to generate the Profile Summary report and Timeline Trace.
 
-```
-make gen_report TARGET=hw_emu STEP=localbuf
-```
+    ```
+    make gen_report TARGET=hw_emu STEP=localbuf
+    ```
 
 ## View Profile Summary for Hardware Emulation
 
 1. Use the following command to view the Profile Summary report.
 
-```
-make view_prof_report TARGET=hw_emu STEP=localbuf
-```
+   ```
+   make view_prof_report TARGET=hw_emu STEP=localbuf
+   ```
 
 The following figure shows the generated Profile Summary report. The kernel execution time is now 1.574 ms rather than the baseline performance of 3.903 ms (see the following table). This is because you removed all global memory accesses for the calculation and stored image data and coefficients in the local memory.
 
-![][localbuf_hwemu_profilesummary]
+![](./images/191_localbuf_hwemu_pfsummary_new_2.jpg)
 
 2. Capture the performance data from Profile Summary report, and add it to the following table.
 

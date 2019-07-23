@@ -102,7 +102,7 @@ Use the following instructions to convert the C code into kernel code, and conve
 
 1. Also, the number of transfers is 91024 which seems to be too much for the required data transfer times. In the next sections, you will optimize on those areas.
 
-    ![][baseline_hwemu_profilesummary]
+    ![](./images/191_baseline_hwemu_pfsummary_new_2.jpg)
 
 1. Record the performance results from the Profile Summary report, and fill in the following table. Your numbers might vary.
 

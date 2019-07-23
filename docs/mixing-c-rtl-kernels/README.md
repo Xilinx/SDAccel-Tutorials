@@ -57,7 +57,7 @@ Before running any of the examples, ensure you have setup the SDx tools, platfor
 
 In this step, you will build an application, consisting of host code and a C++ kernel using a makefile.  
 
-For an overview on building an application, refer to [Building An Application](/Pathway3/BuildingAnApplication.md).
+For an overview on building an application, refer to [Building An Application](/docs/Pathway3/BuildingAnApplication.md).
 
 ## C++ Based Kernel
 
@@ -213,7 +213,7 @@ Similar to the previous section, you will build, emulate, and review the generat
 
 First, you will create and package an RTL-based kernel using the RTL Kernel Wizard. By default, the wizard creates a kernel to increment by one. This kernel will be used in this tutorial. Additionally, the wizard automates the steps needed to package the RTL design into a kernel object file (XO).
 
-You will generate the RTL-based kernel by quickly going through the RTL Kernel Wizard steps without much detail. Review the [Getting Started with RTL Kernels](/docs/getting-started-rtl-kernels/README.md) RTL Kernel Wizard for a thorough tutorial. For complete details on the RTL Kernel Wizard, refer to  the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
+You will generate the RTL-based kernel by quickly going through the RTL Kernel Wizard steps without much detail. Review the [Getting Started with RTL Kernels](/docs/getting-started-rtl-kernels/) RTL Kernel Wizard for a thorough tutorial. For complete details on the RTL Kernel Wizard, refer to  the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
 
 ### Create the SDAccel Project
 
@@ -368,7 +368,7 @@ Because a CPP emulation file was packaged with the RTL Kernel (through the RTL W
 - For a better understanding of building applications, running emulation, and generating profile and trace reports, see the [Essential Concepts for Building and Running the Accelerated Application](/docs/Pathway3) tutorial.
 
 - For details about the RTL Kernel Wizard:  
-  - Review the [Getting Started with RTL Kernels](/docs/getting-started-rtl-kernels/README.md) tutorial.
+  - Review the [Getting Started with RTL Kernels](/docs/getting-started-rtl-kernels/) tutorial.
   - Review the [RTL Kernel Wizard](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#ouz1504034324041) section in the _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
 
 </br>
