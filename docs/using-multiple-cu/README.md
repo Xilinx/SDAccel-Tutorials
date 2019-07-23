@@ -74,7 +74,7 @@ Run hardware emulation with the following command.
 
 For hardware emulation (`hw_emu`), the kernel code is compiled into a hardware model, which is run in a
 hardware simulator, while the rest of the system uses a C simulator. Building and running takes longer but provides a detailed, cycle-aware, view of kernel activity. This target is useful for testing the functionality of the logic that will run in the FPGA and for getting initial performance estimates.
->**NOTE:** For instructions on how to build the host software and hardware, refer to the [Building an Application](/BuildingAnApplication.md) lab.
+>**NOTE:** For instructions on how to build the host software and hardware, refer to the [Building an Application](/docs/Pathway3/BuildingAnApplication.md) lab.
 
 ## Inspect the Host Code
 

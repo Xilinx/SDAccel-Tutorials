@@ -28,7 +28,7 @@ To build the host code, use the following XCPP command for the `./reference-file
 xcpp -I$XILINX_XRT/include/ -I$XILINX_VIVADO/include/ -Wall -O0 -g -std=c++14 ./src/host.cpp  -o 'host'  -L$XILINX_XRT/lib/ -lOpenCL -lpthread -lrt -lstdc++
    ```
 
-This command specifies the required libraries and include files for Xilinx Runtime (XRT), the Vivado tools, and the OpenCL API. For more information on building the host, refer to the [Building an Application](https://github.com/Xilinx/TechDocs/blob/SDAccel-Tutorials-XDF-develop/docs/Pathway3/BuildingAnApplication.md) lab in the  Essential Concepts for Building and Running the Accelerated Application tutorial.
+This command specifies the required libraries and include files for Xilinx Runtime (XRT), the Vivado tools, and the OpenCL API. For more information on building the host, refer to the [Building an Application](/docs/Pathway3/BuildingAnApplication.md) lab in the  Essential Concepts for Building and Running the Accelerated Application tutorial.
 
 >**TIP**: To run the commands shown here, you must set up the environment for the SDX development tools and XRT as discussed in *Building an Application*.
 
@@ -36,7 +36,7 @@ This command specifies the required libraries and include files for Xilinx Runti
 
 Similar to building the software application, building the hardware requires [compiling](../Pathway3/BuildingAnApplication.md#hardware-compilation) and [linking](../Pathway3/BuildingAnApplication.md#hardware-linking) steps using the XOCC compiler.
 
-In the following command, the build target is for software emulation (`-t sw_emu`). You can also specify other build targets, such as `hw_emu` and `hw` as explained in the [Building an Application](https://github.com/Xilinx/TechDocs/blob/SDAccel-Tutorials-XDF-develop/docs/Pathway3/BuildingAnApplication.md) lab in the Essential Concepts for Building and Running the Accelerated Application tutorial.
+In the following command, the build target is for software emulation (`-t sw_emu`). You can also specify other build targets, such as `hw_emu` and `hw` as explained in the [Building an Application](/docs/Pathway3/BuildingAnApplication.md) lab in the Essential Concepts for Building and Running the Accelerated Application tutorial.
 
 * Use the following commands for compiling the hardware kernel for the VADD example.
 

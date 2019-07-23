@@ -42,7 +42,7 @@ If necessary, it can be easily ported to other versions and platforms.
 >
 >* Before running any of the examples, make sure you have installed Xilinx Runtime (XRT) and the SDAccel development environment as described in the *SDAccel Development Environment Release Notes, Installation, and Licensing Guide* ([UG1238)](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html).
 >* If you run applications on the Alveo™  card, ensure the card and software drivers have been correctly installed by following the instructions in the *Getting Started with Alveo Data Center Accelerator Cards Guide* ([UG1301](https://www.xilinx.com/support/documentation/boards_and_kits/accelerator-cards/ug1301-getting-started-guide-alveo-accelerator-cards.pdf)).
->* Before running this lab, you must be familiar with the [Essential Concepts for Building and Running the Accelerated Application](https://github.com/Xilinx/TechDocs/tree/SDAccel-Tutorials-XDF-develop/docs/Pathway3) tutorial.
+>* Before running this lab, you must be familiar with the [Essential Concepts for Building and Running the Accelerated Application](/docs/Pathway3/) tutorial.
 
 ## Accessing the Tutorial Reference Files
 

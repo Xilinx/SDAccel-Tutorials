@@ -14,7 +14,7 @@
 
 ## Introduction
 
-As described in [SDAccel Execution Model](../SDAccel-Execution-Model/README.md), an accelerated application consists of a software program running on an x86 server, and the accelerated kernels running on an Alveo accelerator card and Xilinx FPGA. The sources for both of these need to be built (compiled and linked) separately. For additional details see the *SDAccel Environment User Guide* ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
+As described in [SDAccel Execution Model](/docs/sdaccel-execution-model/), an accelerated application consists of a software program running on an x86 server, and the accelerated kernels running on an Alveo accelerator card and Xilinx FPGA. The sources for both of these need to be built (compiled and linked) separately. For additional details see the *SDAccel Environment User Guide* ([UG1023](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/itd1534452174535.html)).
 
 This tutorial describes how to build both the software and hardware portions of your design using the Xilinx® XCPP and XOCC compilers. It describes various command line options, including how to specify a target platform, and building for hardware or software emulation.
 
@@ -99,7 +99,7 @@ The object files are subsequently linked with the shell (hardware platform) thro
 The following figure shows the compiling and linking flow for the various coded hardware kernels.  
   ![compiling_and_linking_flow](images/compiling_and_linking_flow.png)  
 
-This tutorial is limited to 'xocc' compilation and does not consider RTL kernels. For details on building RTL kernels, see the [Getting Started with RTL Kernels](https://github.com/Xilinx/TechDocs/tree/SDAccel-Tutorials-XDF-develop/docs/getting-started-rtl-kernels) tutorial.
+This tutorial is limited to 'xocc' compilation and does not consider RTL kernels. For details on building RTL kernels, see the [Getting Started with RTL Kernels](docs/getting-started-rtl-kernels) tutorial.
 
 ### Hardware Compilation
 
@@ -281,7 +281,7 @@ The following steps summarize how to build both the software and hardware target
 After successfully building a design, you will want to run emulation to debug and optimize the design.
 
 * The [Running Software and Hardware Emulation](./Emulation.md) lab details how to run software and hardware emulation.
-* If you have a Xilinx Alveo card, you can also run the application directly on hardware by following the details in the [Execute in Hardware](./HardwareExec.md) lab.
+* If you have a Xilinx Alveo card, you can also run the application directly on hardware by following the details in the [Executing in Hardware](./HardwareExec.md) lab.
 
 </br>
 <hr/>

@@ -230,7 +230,7 @@ You have performed a couple of optimizations on the hardware kernels to improve 
 
 [function_pipeline]: ./images/4_function_pipelining.png "Function Pipelining"
 [dataflow]: ./images/dataflow.png "Dataflow"
-[dataflow_hwemu_profilesummary]: ./images/191_dataflow_hwemu_pfsummary_new_2.JPG "Dataflow version hardware emulation profile summary"
+[dataflow_hwemu_profilesummary]: ./images/191_dataflow_hwemu_pfsummary_new_2.jpg "Dataflow version hardware emulation profile summary"
 
 </br>
 <hr/>

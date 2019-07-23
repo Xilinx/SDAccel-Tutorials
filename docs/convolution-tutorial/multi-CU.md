@@ -267,7 +267,7 @@ Here is the updated table.
 
 In this step, you performed host code optimizations by using out-of-order command queue and executing multiple CUs. In the next step, you will have the application [run the accelerator in hardware](./RunOnHardware.md).
 
-[hostopt_hwemu_profilesummary]: ./images/191_hostopt_hwemu_pfsummary_40_2.JPG "Host code optimization version hardware emulation profile summary"
+[hostopt_hwemu_profilesummary]: ./images/191_hostopt_hwemu_pfsummary_40_2.jpg "Host code optimization version hardware emulation profile summary"
 
 </br>
 <hr/>

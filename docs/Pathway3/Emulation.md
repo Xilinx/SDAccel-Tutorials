@@ -198,7 +198,7 @@ The following steps summarize the steps necessary to configure and run emulation
 
 ## Next Step
 
-After you perform emulation, generate the Profile Summary and Timeline Trace reports for further debugging and optimization. For details on how to generate and view these reports, refer to the [Generate Profile And Trace Reports](./ProfileAndTraceReports.md) lab.
+After you perform emulation, generate the Profile Summary and Timeline Trace reports for further debugging and optimization. For details on how to generate and view these reports, refer to the [Generating Profile And Trace Reports](./ProfileAndTraceReports.md) lab.
 
 </br>
 <hr/>
