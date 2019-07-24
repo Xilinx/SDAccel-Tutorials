@@ -18,11 +18,15 @@
 
 ### 1. Programming and Execution Model
 
-In the SDAccel™ environment framework, an application is split into a host program and hardware accelerated kernels, with a communication channel between them for data transfer. The host application, written in C/C++ and using API calls like OpenCL, runs on an x86 server; the hardware accelerated kernels run within the Xilinx FPGA on an Alveo accelerator card. [Read more...](/docs/sdaccel-execution-model/)
+In the SDAccel™ environment framework, an application is split into a host program and hardware accelerated kernels, with a communication channel between them for data transfer. The host application, written in C/C++ and using API calls like OpenCL™, runs on an x86 server; the hardware accelerated kernels run within the Xilinx FPGA on an Alveo™ Data Center accelerator card. 
+
+[Read more...](/docs/sdaccel-execution-model/)
 
 ### 2. Setting up the Alveo Accelerator Cards and SDAccel Tools
 
-Xilinx® Alveo™ Data Center accelerator cards provide compute acceleration performance and flexibility for Data Centers looking to increase throughput. You can install Alveo accelerator cards in deployment systems for running accelerated applications, or in SDAccel development systems, you can develop, debug, and optimize applications running on Alveo accelerator cards. [Read more...](/docs/alveo-getting-started/)
+Alveo Data Center accelerator cards provide compute acceleration performance and flexibility for Data Centers looking to increase throughput. You can install Alveo accelerator cards in deployment systems for running accelerated applications, or in SDAccel development systems, you can develop, debug, and optimize applications running on Alveo accelerator cards. 
+
+[Read more...](/docs/alveo-getting-started/)
 
 ### 3. Building the Accelerated Application - Essential Concepts
 
@@ -50,13 +54,13 @@ In this tutorial, you will learn how to do the following:
 
 [Read more...](/docs/my-first-sdaccel-application/)
 
-### 5. Optimizing Accelerated FPGA Applications - Based on SDAccel Methodology
+### 5. Optimizing Accelerated FPGA Applications — Based on SDAccel Environment Methodology
 
 The methodology for developing optimized accelerated applications is comprised of two major phases: architecting the application, and developing the hardware kernels. In the first phase, you make key decisions about the application architecture by determining which software functions should be accelerated onto FPGA kernels, how much parallelism can be achieved, and how to deliver it in code. In the second phase, you implement the kernels by structuring the source code, and applying the necessary compiler options and pragmas to create the kernel architecture needed to achieve the optimized performance target.
 
 In this tutorial, you will learn how to do the following:
 
-- Create an SDAccel application from the C application.
+- Create an SDAccel environment application from the C application.
 - Optimize memory transfers.
 - Optimize using fixed point data types.
 - Optimize with dataflow.

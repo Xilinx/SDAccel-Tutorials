@@ -38,7 +38,9 @@ The SDAccel environment execution model can be broken down into the following st
 
 ## Next Steps
 
-Install and configure a development system to write and build host programs and hardware kernels using the SDAccel development environment. Install and configure the Alveo accelerator cards in development, or deployment systems. [Read more...](/docs/alveo-getting-started/)
+Install and configure a development system to write and build host programs and hardware kernels using the SDAccel development environment. Install and configure the Alveo accelerator cards in development, or deployment systems.
+
+[Read more...](/docs/alveo-getting-started/)
 
 </br>
 <hr/>

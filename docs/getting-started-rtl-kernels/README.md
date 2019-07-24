@@ -32,7 +32,7 @@ This tutorial provides the following reference files:
   - The host enqueues the RTL kernel (executed on the FPGA), which reads the buffer of the DDR, performs `B[i] = A[i]+B[i]`, and then writes the result back to the DDR.
   - The host reads back the data to compare the results.
 
-Using these reference files, the tutorial will guide you from the first step of creating an SDx™ project to the final step of building and running your project.
+Using these reference files, the tutorial will guide you from the first step of creating an SDx™ environment project to the final step of building and running your project.
 
 # Before You Begin
 

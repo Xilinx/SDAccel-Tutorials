@@ -12,7 +12,7 @@
 
 ## Getting Started
 
-Learn how to [develop accelerated applications using SDAccel Development Tools](docs/sdaccel-getting-started/).
+Learn how to [develop accelerated applications using SDAccel™ Environment Development Tools](docs/sdaccel-getting-started/).
 
 [![Pathways](docs/sdaccel-getting-started/images/pathway.png)](docs/sdaccel-getting-started/)
 
@@ -32,7 +32,7 @@ Learn how to [develop accelerated applications using SDAccel Development Tools](
  <tr>
  <td align="center"><a href="docs/mixing-c-rtl-kernels/README.md">Mixing C and RTL</a></td>
  <td align="center">C and RTL</td>
- <td>This tutorial demonstrates working with an application containing RTL and OpenCL™ kernels to familiarize yourself with the SDAccel™ environment flow, along with various design analysis features.</td>
+ <td>This tutorial demonstrates working with an application containing RTL and OpenCL™ kernels to familiarize yourself with the SDAccel environment flow, along with various design analysis features.</td>
  </tr>
  <tr>
  <td align="center"><a href="docs/using-multiple-cu/README.md">Using Multiple Compute Units</a></td>

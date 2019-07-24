@@ -16,7 +16,7 @@ This tutorial demonstrates a flexible kernel linking process to increase the num
 
 # Tutorial Overview
 
-By default, the SDAccel™ tool creates one CU for each kernel. A host program can use the same kernel multiple times for different sets of data. In these cases, it is useful to generate multiple CUs of the kernel to let those CUs run concurrently, and improve the performance of the overall system.  
+By default, the SDAccel™ environment tool creates one CU for each kernel. A host program can use the same kernel multiple times for different sets of data. In these cases, it is useful to generate multiple CUs of the kernel to let those CUs run concurrently, and improve the performance of the overall system.  
 
 For more information, see [Multiple Instances of a Kernel](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/pni1524163195211.html#yzb1524519238289) in the _SDAccel Environment Programmers Guide_ ([UG1277](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/vno1533881025717.html)).
 

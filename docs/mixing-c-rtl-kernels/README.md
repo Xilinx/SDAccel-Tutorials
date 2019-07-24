@@ -12,7 +12,7 @@
 
 # Introduction
 
-In the SDAccel™ development environment framework, an application program is split between a host application and hardware accelerated kernels. The host application is developed in C/C++ with OpenCL™ API calls.  The hardware kernels, on the other hand, can be developed in C/C++, OpenCL C, or RTL. In fact, SDAccel applications can use any combination of kernels developed in the different languages. The host code is indifferent to how the kernel was developed; it uses the same function call.
+In the SDAccel™ development environment framework, an application program is split between a host application and hardware accelerated kernels. The host application is developed in C/C++ with OpenCL™ API calls.  The hardware kernels, on the other hand, can be developed in C/C++, OpenCL C, or RTL. In fact, SDAccel environment applications can use any combination of kernels developed in the different languages. The host code is indifferent to how the kernel was developed; it uses the same function call.
 
 # Tutorial Overview
 
