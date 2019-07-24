@@ -128,8 +128,8 @@ After the functional correctness and host-kernel integration has been verified u
 1. For hardware, rebuild the kernels using the `-t hw` XOCC option.
 
    ```bash
-   xocc -t hw_emu --platform xilinx_u200_xdma_201830_1 -g -c -k vadd -I'../src' -o'vadd.xilinx_u200_xdma_201830_1.xo' './src/vadd.cpp'
-   xocc -t hw_emu --platform xilinx_u200_xdma_201830_1 -g -l --nk vadd:1:vadd_1 -o'vadd.xilinx_u200_xdma_201830_1.xclbin' vadd.xilinx_u200_xdma_201830_1.xo
+   xocc -t hw --platform xilinx_u200_xdma_201830_1 -g -c -k vadd -I'../src' -o'vadd.xilinx_u200_xdma_201830_1.xo' './src/vadd.cpp'
+   xocc -t hw --platform xilinx_u200_xdma_201830_1 -g -l --nk vadd:1:vadd_1 -o'vadd.xilinx_u200_xdma_201830_1.xclbin' vadd.xilinx_u200_xdma_201830_1.xo
    ```
 
 2. Ensure the environment variable XCL_EMULATION_MODE is not set.

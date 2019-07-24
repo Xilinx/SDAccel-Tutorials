@@ -18,7 +18,7 @@ The SDAccel™  environment XOCC compiler creates kernel objects from the source
 
 This tutorial shows you how to control the Vivado tool flows when implementing your project and guides you through the steps in the command line flow.
 
-The SDAccel™ environment provides two methods to control the Vivado tool flow:
+The SDAccel environment provides two methods to control the Vivado tool flow:
 
 1. When compiling or linking for a system build, you can pass Vivado synthesis and implementation options using the XOCC `--xp` switch.
 
@@ -26,7 +26,7 @@ The SDAccel™ environment provides two methods to control the Vivado tool flow:
 
 2. If your application has already been compiled, then you can:
 
-   * Optimize the design with the Vivado® Design Suite.
+   * Optimize the design with the Vivado Design Suite.
    * Generate a new routed checkpoint.
    * Reuse this checkpoint to generate a new platform file (xclbin).
 
@@ -153,7 +153,7 @@ Starting FPGA bitstream generation.
 
 # Putting it All Together
 
-The following section summarizes all the steps to control Vivado implementation with the XOCC command, optimize design with the Vivado tool, and reuse implemented dcp to generate the platform file. You might use it as a quick reference for commands.
+The following section summarizes all the steps to control Vivado tools implementation with the XOCC command, optimize design with the Vivado tools, and reuse implemented dcp to generate the platform file. You might use it as a quick reference for commands.
 
 1. Set up the environment and working directory.
 
