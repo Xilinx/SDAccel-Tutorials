@@ -186,4 +186,4 @@ This module explained how you can develop your FPGA binary on-premise, create an
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

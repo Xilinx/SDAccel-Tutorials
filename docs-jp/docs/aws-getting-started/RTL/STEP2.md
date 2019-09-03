@@ -8,7 +8,7 @@ This tutorial describes how to package an RTL design as an SDAccel™ kernel and
 4. [Creating the Amazon FPGA Image](Run-your-first-SDAccel-program-on-AWS-F1.md#4-creating-the-amazon-fpga-image)
 5. [Executing the host application with the Amazon FPGA image](Run-your-first-SDAccel-program-on-AWS-F1.md#5-executing-the-host-application-with-the-amazon-fpga-image)
 
->**Note**: This tutorial does not currently use the SDAccel **RTL Kernel Wizard**. The SDAccel RTL Kernel Wizard is a new feature which assists users through the process of packaging RTL designs as SDAccel kernels. The RTL Kernel Wizard generates the required XML file, an example project design, and a set of scripts to build that example design into an XO file. For more details on how to use the RTL Kernel Wizard, watch this [online video](https://www.youtube.com/watch?v=IZQ1A2lPXZk).
+>**Note**: This tutorial does not use the SDAccel **RTL Kernel Wizard**. The SDAccel RTL Kernel Wizard is a feature which assists users through the process of packaging RTL designs as SDAccel kernels. The RTL Kernel Wizard generates the required XML file, an example project design, and a set of scripts to build that example design into an XO file. For more details on how to use the RTL Kernel Wizard, watch this [online video](https://www.youtube.com/watch?v=IZQ1A2lPXZk).
 
 
 
@@ -42,25 +42,23 @@ Of note, the FPGA device is initialized using the `xcl::find_binary_file` and `x
 * `\<name>.(aws)xclbin`
 
 ## Preparing to run the Tutorial
-- Execute the following commands to clone the GitHub repository and configure the SDAccel environment:
 
-```bash
-cd $AWS_FPGA_REPO_DIR
-source sdaccel_setup.sh
-```
+- Using a RDP client, connect to an AWS EC2 instance loaded with the FPGA Developer AMI. Instructions on how to accomplish this are covered in the [Create, configure and test an AWS F1 instance](STEP1.md) guide.
+- In a terminal on your AWS instance, execute the following commands to configure the SDAccel environment:   
+    ```bash
+    cd $AWS_FPGA_REPO_DIR
+    source sdaccel_setup.sh
+    ```
 
-- Go to the test case directory   
+- Go to the directory containing the example  
+    ```bash
+    cd $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd
+    ```
 
-```bash
-cd $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd
-```
-
-The SDAccel GitHub examples use common header files that need to be copied in the local project source folder to make it easier to use.
-- Enter the **make local-files** command to copy all necessary files in the local directory:  
-
-```
+- The SDAccel GitHub examples use common header files that need to be copied in the local project source folder to make it easier to use. Execute the **make local-files** command to copy all necessary files in the local directory:  
+   ```
    make local-files
-```
+   ```
 
 ## 1. Writing an RTL Design adhering to the SDAccel Kernel Interface Requirements
 To be used as an SDAccel kernel, an RTL design must comply with the following signals and interface requirements:
@@ -75,6 +73,8 @@ To be used as an SDAccel kernel, an RTL design must comply with the following si
       - `Bit 2`: idle signal - The kernel asserts this signal when it is not processing any data.
  * One or more AXI4-Stream interfaces for streaming data between kernels.
 
+A complete reference for interface requirements can be found in the [SDAccel User Guide](https://www.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#qnk1504034323350).
+
 In this example, the RTL is already compliant and doesn't need to be modified.
 
 The RTL code for this example is located in the `./src/hdl` directory.
@@ -88,7 +88,7 @@ To package the kernel and create the XO file, you must:
 - Run the `package_xo` command to generate the XO file.
 
 #### Writing a Kernel Description XML File    
-A special XML file is needed to describe the interface properties of the RTL kernel. The format for the kernel XML file is described in the [Create Kernel Description XML File](https://www.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/topics/design-flows/concept-create-kernel-description-xml-file.html) section of the documentation.
+A special XML file is needed to describe the interface properties of the RTL kernel. The format for the kernel XML file is described in the [Create Kernel Description XML File](https://www.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#rzv1504034325561) section of the documentation.
 
 This XML file can be created manually or with the RTL Kernel Wizard. In this example, the XML file is already provided (`./src/kernel.xml`).
 
@@ -100,35 +100,30 @@ The example comes with the `./scripts/package_kernel.tcl` script which takes the
 #### Running the package_xo command to Generate the XO File
 - In the `SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd` directory, run the following commands to package the RTL and create the XO file:   
 
-```bash
-vivado -mode tcl  
+    ```bash
+    vivado -mode tcl  
 
-# Set suffix for the directory for RTL-IP import   
-Vivado% set suffix rtl_ip    
+    # Set suffix for the directory for RTL-IP import   
+    Vivado% set suffix rtl_ip    
 
-# Import the RTL to the “packaged_kernel_{$suffix}” IP directory   
-Vivado% source scripts/package_kernel.tcl   
+    # Import the RTL to the “packaged_kernel_{$suffix}” IP directory   
+    Vivado% source scripts/package_kernel.tcl   
 
-# Create the XO file
-Vivado% package_xo -xo_path ./src/rtl_vadd.xo \
+    # Create the XO file
+    Vivado% package_xo -xo_path ./src/rtl_vadd.xo \
                    -kernel_name krnl_vadd_rtl \
                    -ip_directory ./packaged_kernel_rtl_ip \
                    -kernel_xml ./src/kernel.xml
-# Exit Vivado
-Vivado% exit
-```
+    # Exit Vivado
+    Vivado% exit
+    ```
 
 The `./src/rtl_vadd.xo` file gets generated. It contains all the necessary information SDAccel requires to use the kernel.
 
 ## 3. Compiling the Host Application and the FPGA Binary containing the RTL Kernel
 This section covers the following steps:
-   * Creating and configuring a new project
-     - Starting the SDAccel GUI
-     - Creating a workspace
-     - Setting the platform
-     - Creating a new empty project
-     - Importing the application host code and kernel XO file
-     - Specifying the binary container for the kernel executable
+   * Creating a new project in the SDAccel GUI
+   * Importing design files including the pre-generated .xo file
    * Verifying the application using the hardware emulation flow
    * Compiling the host application and the FPGA binary for hardware execution   
 
@@ -136,104 +131,87 @@ The host application code for this example is in the `./src/host.cpp` file.
 
 In the SDAccel flow, the host code uses OpenCL APIs to interacts with the FPGA.
 
-### Creating and Configuring a new Project
-
-#### Starting the SDAccel GUI
+### Creating a new Project in the SDAccel GUI
 - Open the SDx GUI by running the following command:
-```bash
-  sdx
-```
+   ```bash
+  sdx -worskpage Test_dir
+  ```
+- In the **Welcome** window, select **Create SDx Project**
+- In the **Project Type** screen, select **Application**, and click **Next**.
+- Set the project name to **TEST_RTL_KERNEL**, and click **Next**.
+- In the **Platform** screen click **Add Custom Platform...** then browse into the ```/home/centos/src/project_data/aws-fpga/SDAccel/aws_platform``` directory, and then click **OK**.
+- Choose the newly added AWS VU9P F1 custom platform, and click **Next**.
+- In the **System configuration** screen keep the default settings, and click **Next**.
+- In the **Templates** screen select **Empty Application**, and click Finish.
 
-#### Creating a Workspace
-- In the Workspace Launcher window, add a workspace inside the current directory named `Test_dir`, as shown below. A new directory `Test_dir` will be created and used to store all the log files from your runs.
+### Importing the Application Host Code and Kernel XO File.
+- Click the **Import Sources...** button ![](./images/ImportSRC.png) on the **Project Explorer** pane located in the left side of the GUI.
+- In the **Import Sources** screen, click the **Browse** button, select the **rtl_vadd/src** directory, and click **OK**.
+- In the right pane of the **Import Sources** screen, select the files listed below, then click **Finish**.
+    * `host.cpp`
+    * `xcl2.cpp`
+    * `xcl2.h`
+    * `rtl_vadd.xo`
 
-![](./images/img1.jpg)
+![](./images/STEP2-ImportFiles.png)  
 
-#### Setting the Platform
-- In the Welcome window, to set the path to the AWS F1 platform, click **Add custom platform**.  
+Your design sources have now been added to your project, as can be seen by expanding the **TEST_RTL_KERNEL > src** folder in the **Project Explorer** pane.
 
-![](./images/img2.jpg)  
+### Specifying the Binary Container for the Kernel Executable
+Now that you have imported your design files, you need to add a binary container and associated hardware function(s) to your project. The binary container is the output file (`.xclbin`) containing the output of the FPGA compilation process. A hardware function is a effectively an acceleration kernel. A binary container can contain one or more hardware functions. In this example, we have only one.
 
-- Click on the plus sign:  
+- Click the **Add Hardware Function...** button ![](./images/AddHW.png). This button is centrally located in the **Hardware Functions** section of the main **Project Settings** window.
 
-![](./images/img3.jpg)  
+![](./images/STEP2-AddHW.png)
 
-- Browse to the `<git area>/SDAccel/aws_platform/xilinx_aws-vu9p-f1_4ddr-xpr-2pr_4_0/` directory, and select **platform**.  
+- SDAccel analyzes the input sources for all available kernels and recognizes the **krnl_vadd_rtl** kernel from the .xo file. Click **OK**.
 
-![](./images/img4.jpg)  
-
-- Click **Apply** and **OK**. This completes the platform setup process.
-
-#### Creating a new Empty Project
-- In the Welcome window, click **Create SDX Project** and set the project name to **TEST_RTL_KERNEL**.  
-- Step through the next three screens (keeping the default selections) by clicking **Next** -> **Next** -> **Next**.  
-- Finally, select an **Empty Application** in the **Available Templates** section, and then click **Finish**.
-
-#### Importing the Application Host Code and Kernel XO File.
-On the left side of the SDAccel GUI, you will see the **Project Explorer** pane.
-1. Right-click **project.sdx**, and select **Import**.
-
-![](./images/img5.jpg)
-
-2. Select **General** -> **Filesystem** and then click **Next**.  
-3. Browse to the source file directory of the current example: **rtl_vadd/src**
-4. Select the following files:
-* `host.cpp`
-* `xcl2.cpp`
-* `xcl2.h`
-* `rtl_vadd.xo`
-
-![](./images/img6.jpg)  
-
-#### Specifying the Binary Container for the Kernel Executable
-Now that the files have been imported, instruct SDAccel to add a binary container. This is the output file where the FPGA design will be compiled to.
-
-In the center of the SDAccel GUI, notice the SDx Project Settings.
-- Click the **Add Binary Container** icon.
-
-![](./images/img7.jpg)
-
-The default name for the binary container is `binary_container_1`. Since the host application uses the xcl::find_binary_file utility function, it will automatically find the container by searching for a file with the default name.
-
-Project creation and setup is now complete.
+Notice that a binary container is added to the project, and the **krnl_vadd_rtl** kernel is added to this container. The default name for the binary container is `binary_container_1`. Since the host application uses the `xcl::find_binary_file` utility function, it will automatically find the container by searching for a file with the default name.
 
 ### Verifying the Application using the Hardware Emulation Flow
 SDAccel provides three different build configurations:  
-* **Emulation-CPU**
-* **Emulation-HW**
-* **System**
+* Software Emulation (`Emulation-SW`)
+* Hardware Emulation (`Emulation-HW`)
+* Hardware (`System`)
 
-In **Emulation-CPU** mode, the host application executes with a C/C++ or OpenCL model of the kernel(s). The main goal of this mode is to ensure the functional correctness of your application.
+In **Emulation-SW** mode, the host application executes with a C/C++ or OpenCL model of the kernel(s). The main goal of this mode is to ensure the functional correctness of your application.
 >**NOTE**: this mode is not presently supported for RTL kernels.
 
 In **Emulation-HW** mode, the host application executes with a RTL model of the kernel(s). This mode enables the programmer to check the correctness of the logic generated for the custom compute units and provides performance estimates.
 
 In **System** mode, the host application executes with the actual FPGA.
 
-- To run hardware emulation, go to SDx Project Settings, and ensure that **Active build configuration** is set to `Emulation-HW`.
+- To run hardware emulation, go to the main **Project Settings** window, and ensure that **Active build configuration** is set to `Emulation-HW`.
 
-![](./images/img9.jpg)
+![](./images/STEP2-BuildConfig.png)
 
-- To star the emulation build process, click the **Build** icon.
+- To start the build process, click the **Build** button ![](./images/Build.png). The build process will take ~3-4 minutes to complete.
+- After the emulation build process completes, click the **Run** button ![](./images/Run.png) to run Hardware Emulation.
+- This example only takes a few seconds to run and you should see the following messages in the **Console** window indicating that the run successfully completed:
+    ```
+    Found Platform
+    Platform Name: Xilinx
+    XCLBIN File Name: vadd
+    INFO: Importing ../binary_container_1.xclbin
+    Loading: '../binary_container_1.xclbin'
+    INFO: [SDx-EM 01] Hardware emulation runs simulation underneath. Using a large data set will result in long simulation times. It is recommended that a small dataset is used for faster execution. This flow does not use cycle accurate models and hence the performance data generated is approximate.
+    TEST PASSED
+    INFO: [SDx-EM 22] [Wall clock time: 13:05, Emulation time: 0.00385346 ms] Data transfer between kernel(s) and global memory(s)
+    BANK0          RD = 2.000 KB               WR = 1.000 KB        
+    BANK1          RD = 0.000 KB               WR = 0.000 KB        
+    BANK2          RD = 0.000 KB               WR = 0.000 KB        
+    BANK3          RD = 0.000 KB               WR = 0.000 KB  
+    ```
 
-![](./images/img10.jpg)   
+- The **Profile Summary** and  **Application Timeline** reports generated during the emulation run can be accessed through the **Assistant** window, in the bottom-left corner of the GUI.
 
-- After the emulation build process completes, to run Hardware Emulation, click the **Run** icon.
-
-![](./images/img11.jpg)
-
-After completion of Hardware Emulation run, you can find and inspect various reports in the Reports tab, such as the **System Estimate**, **Profile Summary**, and  **Application Timeline**.  
-
-![](./images/img12.jpg)
+![](./images/STEP2-Assistant.png)
 
 ### Compiling the Host Application and the FPGA Binary for Hardware Execution   
-- To run hardware execution, go to **SDx Project Settings** and set **Active build configuration** to **System**.
+- To run hardware execution, set **Active build configuration** to **System** in the main **Project Settings** window.
 - Click the **Build** icon to initiate the hardware build process.
-
-It generally takes a few hours to complete the hardware build.   
-
-At the end of this process, the host executable (`TEST_RTL_KERNEL.exe`) and FPGA binary (`binary_container_1.xclbin`) are generated in the `Test_dir/TEST_RTL_KERNEL/System` directory.  
-
+    - For this example, the hardware build takes about one hour to finish
+    - The host executable (`TEST_RTL_KERNEL.exe`) and FPGA binary (`binary_container_1.xclbin`) are generated in the `Test_dir/TEST_RTL_KERNEL/System` directory.  
 - Exit the SDAccel GUI.
 
 ## 4. Creating the Amazon FPGA Image
@@ -266,7 +244,7 @@ The above step generates an `.awsxclbin` file and an `_afi_id.txt` file containi
 The command will return **Available** when the AFI is created, registered, and ready use.	Otherwise, the command will return **Pending**.   
 
 ```json
-  "State: {
+  State: {
       "Code" : Available"
   }
 ```
@@ -274,25 +252,25 @@ The command will return **Available** when the AFI is created, registered, and r
 ## 5. Executing the Host Application with the Amazon FPGA Image
 
 After the AFI is **Available**, you can execute the application on the F1 instance.  
-    ```bash
-    sudo sh
-    source /opt/xilinx/xrt/setup.sh   
-    ./TEST_RTL_KERNEL.exe
-    ```  
+```bash
+sudo sh
+source /opt/xilinx/xrt/setup.sh   
+./TEST_RTL_KERNEL.exe
+```
 
 You should see the following output:  
-    ```bash
-    Device/Slot[0] (/dev/xdma0, 0:0:1d.0)
-    xclProbe found 1 FPGA slots with XDMA driver running
-    platform Name: Xilinx
-    Vendor Name : Xilinx
-    Found Platform
-    XCLBIN File Name: vadd
-    INFO: Importing ./binary_container_1.awsxclbin
-    Loading: './binary_container_1.awsxclbin'
-    TEST PASSED
-    ```
 
+```bash
+Device/Slot[0] (/dev/xdma0, 0:0:1d.0)
+xclProbe found 1 FPGA slots with XDMA driver running
+platform Name: Xilinx
+Vendor Name : Xilinx
+Found Platform
+XCLBIN File Name: vadd
+INFO: Importing ./binary_container_1.awsxclbin
+Loading: './binary_container_1.awsxclbin'
+TEST PASSED
+```
 
 Behind these deceptively simple log messages, a lot just happened. The application:
 - Detected the FPGA platform.
@@ -302,7 +280,7 @@ Behind these deceptively simple log messages, a lot just happened. The applicati
 - Triggered the FPGA kernel to sum the two vectors (A and B).
 - Read the results back and checked them for correctness.
 
-This concludes this tutorial on how to run your first SDAccel program on F1 using RTL kernels.
+This concludes this tutorial on how to run your first SDAccel program on AWS F1 using RTL kernels.
 
 Do not forget to stop or terminate your instance.
 <hr/>
@@ -311,4 +289,4 @@ Do not forget to stop or terminate your instance.
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

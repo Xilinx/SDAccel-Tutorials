@@ -305,4 +305,4 @@ After completing this tutorial, you should be able to do the following:
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
