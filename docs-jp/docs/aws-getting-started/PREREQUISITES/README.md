@@ -81,4 +81,4 @@ By default, AWS users do not have access to F1 instances. You need to request an
 Requests are typically processed by AWS in 24 to 48 hours.
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

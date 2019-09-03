@@ -10,7 +10,7 @@ Running and experimenting with the following three examples of RTL kernels will 
 
 This example shows vector addition performed by an RTL kernel with two clocks and the use of the `--kernel_frequency` XOCC option.
 
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/aws_2018.3/getting_started/rtl_kernel/rtl_vadd_2clks) from the SDAccel GitHub repository.
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2clks) from the SDAccel GitHub repository.
 
 
 
@@ -18,13 +18,13 @@ Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/
 
 This example shows how create an accelerated design using more than one RTL Kernel. In this example, Vector Addition is performed with two kernels (Kernel_0 and Kernel_1) which perform vector addition. Kernel_1 reads the output from Kernel_0 as one of two inputs.
 
-[Download and run this example](https://github.com/Xilinx/SDAccel_Examples/tree/aws_2018.3/getting_started/rtl_kernel/rtl_vadd_2kernels) from the SDAccel GitHub repository.
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2kernels) from the SDAccel GitHub repository.
 
 #### Example 3: High-Performance Matrix Multiply with precompiled XO file and advanced Vivado™ implementation options
 
 This example implements a high-performance matrix multiplication of two input matrices (A*B=C). The matrix multiplication kernel operates on matrices of type int16 and produces int16 results. Internally, the kernel has a systolic array of 2048 DSP units and is attached to two DDR banks. The DSP array runs at 400 MHz, whereas the logic around the array runs at 300 MHz.
 
-[Download and run this example](https://github.com/Xilinx/SDAccel_Examples/tree/aws_2018.3/acceleration/high_perf_mat_mult) from the SDAccel GitHub repository.
+Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/acceleration/high_perf_mat_mult) from the SDAccel GitHub repository.
 
 
 ## Get Support and Troubleshoot Issues
@@ -54,4 +54,4 @@ The [AWS F1 SDAccel Development forum](https://forums.aws.amazon.com/forum.jspa?
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

@@ -31,7 +31,7 @@ LDFLAGS = -lOpenCL -lpthread -lrt -lstdc++ -L$(XILINX_SDX)/runtime/lib/x86_64
 CLFLAGS = -t $(TARGET) --platform $(DEVICE) --save-temps 
 
 # Kernel linker flags
-LDCLFLAGS =   --sp pass_1.m_axi_p0:bank0 --sp pass_1.m_axi_p1:bank1 
+LDCLFLAGS =   --sp pass_1.m_axi_p0:DDR[0] --sp pass_1.m_axi_p1:DDR[1] 
 
 EXECUTABLE = pass
 
@@ -49,13 +49,13 @@ pipeline: $(BUILDDIR)/$(EXECUTABLE)
 
 .PHONY: runPipeline
 pipelineRun:
-	cp auxFiles/sdaccel.ini runPipeline
+	cp auxFiles/xrt.ini runPipeline
 	cd runPipeline; \
 	./$(EXECUTABLE) ../$(XCLBIN)/pass.$(TARGET).$(DSA).xclbin 
 	cd runPipeline; \
-	sdx_analyze profile -i sdaccel_profile_summary.csv -f html
+	sdx_analyze profile -i profile_summary.csv -f html
 	cd runPipeline; \
-	sdx_analyze trace sdaccel_timeline_trace.csv -f wdb
+	sdx_analyze trace timeline_trace.csv -f wdb
 	sdx -workspace workspace -report runPipeline/*.wdb
 # sdx -workspace workspace -rundir runPipline
 
@@ -68,13 +68,13 @@ sync:   $(BUILDDIR)/$(EXECUTABLE)
 
 .PHONY: runSync
 syncRun:
-	cp auxFiles/sdaccel.ini runSync
+	cp auxFiles/xrt.ini runSync
 	cd runSync; \
 	./$(EXECUTABLE) ../$(XCLBIN)/pass.$(TARGET).$(DSA).xclbin 
 	cd runSync; \
-	sdx_analyze profile -i sdaccel_profile_summary.csv -f html
+	sdx_analyze profile -i profile_summary.csv -f html
 	cd runSync; \
-	sdx_analyze trace sdaccel_timeline_trace.csv -f wdb
+	sdx_analyze trace timeline_trace.csv -f wdb
 	sdx -workspace workspace -report runSync/*.wdb
 # sdx -workspace workspace -rundir runPipline
 
@@ -87,17 +87,17 @@ buf:   $(BUILDDIR)/$(EXECUTABLE)
 
 .PHONY: runBuf
 bufRun:
-	cp auxFiles/sdaccel.ini runBuf
+	cp auxFiles/xrt.ini runBuf
 	cd runBuf; \
 	./$(EXECUTABLE) ../$(XCLBIN)/pass.$(TARGET).$(DSA).xclbin $(SIZE)
 
 # add code to check for gnuplot and if it exists try to pot otherwise just
 # list data
 bufRunSweep:
-	cp auxFiles/sdaccel.ini runBuf
+	cp auxFiles/xrt.ini runBuf
 	cp auxFiles/run.py runBuf
 	cd runBuf; \
-	./run.py
+	./run.py $(DSA)
 	more runBuf/results.csv
 	if hash gnuplot 2>/dev/null; then gnuplot -p -c auxFiles/plot.txt; fi;
 

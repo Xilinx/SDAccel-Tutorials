@@ -20,4 +20,4 @@ The following videos present key concepts needed to successfully run existing C/
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2018 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
