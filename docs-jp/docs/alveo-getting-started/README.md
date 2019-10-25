@@ -40,8 +40,8 @@ Alveo カードのインストールは、『Alveo データセンター アク�
 
 AWS 用のアプリケーションを開発するには、次のチュートリアルを参照してください。
 
-* [SDAccel および C/C++ を使用した AWS F1 入門](../../../docs/aws-getting-started/CPP)
-* [SDAccel および RTL カーネルを使用した AWS F1 入門](../../../docs/aws-getting-started/RTL)
+* [SDAccel および C/C++ を使用した AWS F1 入門](../../../docs-jp/docs/aws-getting-started/CPP)
+* [SDAccel および RTL カーネルを使用した AWS F1 入門](../../../docs-jp/docs/aws-getting-started/RTL)
 
 ## 次のステップ
 

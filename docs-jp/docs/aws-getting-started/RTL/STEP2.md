@@ -1,104 +1,104 @@
-# Run your first SDAccel Program on AWS F1
+# AWS F1 で最初の SDAccel プログラムを実行
 
-This tutorial describes how to package an RTL design as an SDAccel™ kernel and then use this kernel to accelerate a host application. The tutorial uses the [**vadd_kernel**](https://github.com/Xilinx/SDAccel_Examples/tree/master/getting_started/rtl_kernel/rtl_vadd) example from the SDAccel GitHub Examples repository, and covers the following:
+このチュートリアルでは、SDAccel™ カーネルとして RTL デザインをパッケージする方法と、ホスト アプリケーションをアクセラレートする目的でこのカーネルを使用する方法を説明します。SDAccel GitHub サンプル用リポジトリにある [**vadd_kernel**](https://github.com/Xilinx/SDAccel_Examples/tree/master/getting_started/rtl_kernel/rtl_vadd) を使用し、次の点を学びます。
 
-1. [Writing an RTL design adhering to the SDAccel kernel interface requirements](Run-your-first-SDAccel-program-on-AWS-F1.md#1-writing-an-rtl-design-adhering-to-the-sdaccel-kernel-interface-requirements)
-2. [Packaging the RTL design as an SDAccel kernel (XO file)](Run-your-first-SDAccel-program-on-AWS-F1.md#2-packaging-the-rtl-design-as-an-sdaccel-kernel-xo-file)  
-3. [Compiling the host application and the FPGA binary containing the RTL kernel](Run-your-first-SDAccel-program-on-AWS-F1.md#3-compiling-the-host-application-and-the-fpga-binary-containing-the-rtl-kernel)
-4. [Creating the Amazon FPGA Image](Run-your-first-SDAccel-program-on-AWS-F1.md#4-creating-the-amazon-fpga-image)
-5. [Executing the host application with the Amazon FPGA image](Run-your-first-SDAccel-program-on-AWS-F1.md#5-executing-the-host-application-with-the-amazon-fpga-image)
+1. [SDAccel カーネル インターフェイス要件に準拠した RTL デザインの作成](Run-your-first-SDAccel-program-on-AWS-F1.md#1-writing-an-rtl-design-adhering-to-the-sdaccel-kernel-interface-requirements)
+2. [SDAccel カーネルとして RTL デザインをパッケージ (XO ファイル)](Run-your-first-SDAccel-program-on-AWS-F1.md#2-packaging-the-rtl-design-as-an-sdaccel-kernel-xo-file)  
+3. [ホスト アプリケーションおよび RTL カーネルを含んだ FPGA バイナリのコンパイル](Run-your-first-SDAccel-program-on-AWS-F1.md#3-compiling-the-host-application-and-the-fpga-binary-containing-the-rtl-kernel)
+4. [Amazon FPGA イメージの作成](Run-your-first-SDAccel-program-on-AWS-F1.md#4-creating-the-amazon-fpga-image)
+5. [Amazon FPGA イメージを使用したホスト アプリケーションの実行](Run-your-first-SDAccel-program-on-AWS-F1.md#5-executing-the-host-application-with-the-amazon-fpga-image)
 
->**Note**: This tutorial does not use the SDAccel **RTL Kernel Wizard**. The SDAccel RTL Kernel Wizard is a feature which assists users through the process of packaging RTL designs as SDAccel kernels. The RTL Kernel Wizard generates the required XML file, an example project design, and a set of scripts to build that example design into an XO file. For more details on how to use the RTL Kernel Wizard, watch this [online video](https://www.youtube.com/watch?v=IZQ1A2lPXZk).
-
-
-
-## Example Overview
-This example is a simple vector-add design. The host application writes two vectors (A and B) of arbitrary length to the FPGA kernel which in turn sums the two vectors together to produce an output vector (C). The host application then reads back the result.
-
-#### Overview of the Hardware Kernel
-The hardware kernel has an AXI memory mapped master interface and an AXI-Lite slave interface:
-- The AXI master interface is used to read the values of A and B from global memory and write back the values of C.
-- The AXI-Lite slave interface is used to pass parameters and control the kernel as follows:
-   - Offset 0x00: Control and status register
-   - Offset 0x10: Base address of vector A in global memory
-   - Offset 0x1C: Base address of vector B in global memory
-   - Offset 0x28: Base address of vector C in global memory
-   - Offset 0x34: Length of the vectors
-
-The kernel starts executing when bit 0 of the control register is set to 1. The AXI master issues bursts requests to read values of A and B from global memory and streams them into two FIFOs; one for the values of A, one for the values of B. The adder module reads from both FIFOs, sums the values to compute `C[i] = A[i] + B[i]`, and writes the result into an output FIFO. This FIFO is read by the AXI master to burst the results of the vector-add back into global memory. When the vectors have been processed, the kernel asserts bit 1 of the control register to indicate it is done.
+>**注記**: このチュートリアルでは SDAccel **RTL カーネル ウィザード**は使用しません。SDAccel RTL カーネル ウィザードは、RTL デザインを SDAccel カーネルとしてパッケージしやすくするための機能です。このウィザードでは、必須 XML ファイル、サンプル プロジェクト デザイン、サンプル デザインを XO ファイルにビルドするスクリプト セットが生成されます。RTL カーネル ウィザードの使用方法については、この[オンライン ビデオ](https://www.youtube.com/watch?v=IZQ1A2lPXZk)をご視聴ください。
 
 
-#### Overview of the Host Application
-The host.cpp file provides a very simple application to exercise the vector-add kernel. All FPGA-side operations are triggered using the following standard OpenCL™ API calls:
-- Buffers are created in the FPGA using `cl::Buffer`
-- Data is copy to and from the FPGA using `<command_queue>.enqueueMigrateMemObjects`
-- Kernel arguments (length of the vectors, base addresses of A, B, C) are passed using `<kernel>.setArg`
-- Kernel is executed using `<command_queue>.enqueueTask`
 
-Of note, the FPGA device is initialized using the `xcl::find_binary_file` and `xcl::import_binary_file` utility functions. The `xcl::find_binary_file` function makes it very easy to find the desired FPGA binary file. The function searches four predefined directories for a binary file matching one of the following names:
+## サンプルの概要
+このサンプルは単純な vector-add (ベクター加算) デザインです。ホスト アプリケーションにより、任意の長さの 2 つのベクター (A および B) が FPGA カーネルに書き込まれます。そうすると、この 2 つのベクターの和が計算され、出力ベクター (C) が出力されます。その後、ホスト アプリケーションにより結果がリードバックされます。
+
+#### ハードウェア カーネルの概要
+ハードウェア カーネルには AXI メモリ マップド マスター インターフェイスおよび AXI4-Lite スレーブ インターフェイスがあります。
+- AXI マスター インターフェイスは、グローバル メモリからの値 A および B を読み出し、値 C をライトバックするのに使用されます。
+- AXI4-Lite スレーブ インターフェイスは、次のように、パラメーターを渡し、カーネルを制御するために使用されます。
+   - オフセット 0x00: 制御およびステータス レジスタ
+   - オフセット 0x10: グローバル メモリのベクター A のベース アドレス
+   - オフセット 0x1C: グローバル メモリのベクター B のベース アドレス
+   - オフセット 0x28: グローバル メモリのベクター C のベース アドレス
+   - オフセット 0x34: ベクターの長さ
+
+制御レジスタのビット 0 が 1 にセットされていると、カーネルが実行を開始します。AXI マスターにより、グローバル メモリから値 A および B を読み出すバースト リクエストが出力され、2 つの FIFO (1 つは値 A 用、もう 1 つは値 B 用) にそのリクエストがストリームされます。加算器モジュールにより、両方の FIFO から読み出しが実行され、`C[i] = A[i] + B[i]` の計算をするため両方の値の和が計算され、その結果値が出力 FIFO に書き込まれます。この FIFO は、vector-add の結果をグローバル メモリにバースト ライトバックするため、AXI マスターによって読み出されます。ベクターが処理されると、カーネルにより、処理の完了を知らせるため制御レジスタのビット 1 がアサートされます。
+
+
+#### ホスト アプリケーションの概要
+host.cpp ファイルには、vector-add カーネルを実行するための非常に単純なアプリケーションが含まれています。すべての FPGA 側の操作は、次の標準 OpenCL™ API 呼び出しを使用してトリガーされます。
+- バッファーは `cl::Buffer` を使用して FPGA に作成されます。
+- データのコピーは `<command_queue>.enqueueMigrateMemObjects` を使用して FPGA に対して実行されます。
+- カーネルの引数 (ベクターの長さ、A、B、C のベース アドレス) は `<kernel>.setArg` を使用して渡されます。
+- カーネルは `<command_queue>.enqueueTask` を使用して実行されます。
+
+また、FPGA デバイスは、`xcl::find_binary_file` および `xcl::import_binary_file` のユーティリティ関数を使用して初期化されます。`xcl::find_binary_file` 関数は、目的の FPGA バイナリ ファイルを非常に検索しやすくします。この関数により、次のいずれかの名前に一致するバイナリ ファイルの 4 つのあらかじめ定義されたディレクトリが検索されます。
 * `\<name>.\<target>.\<device>.(aws)xclbin`
 * `\<name>.\<target>.\<device_versionless>.(aws)xclbin`
 * `binary_container_1.(aws)xclbin`
 * `\<name>.(aws)xclbin`
 
-## Preparing to run the Tutorial
+## チュートリアルを実行するための準備
 
-- Using a RDP client, connect to an AWS EC2 instance loaded with the FPGA Developer AMI. Instructions on how to accomplish this are covered in the [Create, configure and test an AWS F1 instance](STEP1.md) guide.
-- In a terminal on your AWS instance, execute the following commands to configure the SDAccel environment:   
+- RDP クライアントを使用して、FPGA Developer AMI と一緒に読み込まれた AWS EC2 インスタンスに接続します。詳細な方法は、[AWS F1 インスタンスの作成、設定、テスト](STEP1.md)を参照してください。
+- AWS インスタンスのターミナルで次のコマンドを実行して、SDAccel 環境を設定します。   
     ```bash
     cd $AWS_FPGA_REPO_DIR
     source sdaccel_setup.sh
     ```
 
-- Go to the directory containing the example  
+- サンプルが含まれているディレクトリに移動します。  
     ```bash
     cd $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd
     ```
 
-- The SDAccel GitHub examples use common header files that need to be copied in the local project source folder to make it easier to use. Execute the **make local-files** command to copy all necessary files in the local directory:  
+- SDAccel GitHub サンプルでは、使いやすくするため、ローカル プロジェクトのソース フォルダーにコピーする必要のある一般的なヘッダー ファイルが使用されます。**make local-files** コマンドを実行して、ローカル ディレクトリにある必要なファイルをすべてコピーします。  
    ```
    make local-files
    ```
 
-## 1. Writing an RTL Design adhering to the SDAccel Kernel Interface Requirements
-To be used as an SDAccel kernel, an RTL design must comply with the following signals and interface requirements:
- * Clock.
- * Active Low reset.
- * One or more AXI4 memory mapped (MM) master interfaces for global memory. All AXI MM master interfaces must have 64-bit addresses.
-   - You are responsible for partitioning global memory spaces. Each partition in the global memory becomes a kernel argument. The memory offset for each partition must be set by a control register programmable via the AXI4 MM Slave Lite interface.
- * One AXI4 MM slave lite control interface. The AXI-Lite interface name must be **S_AXI_CONTROL**.
-    - Offset 0 of the AXI4 MM slave lite must have the following signals:
-      - `Bit 0`: start signal - The kernel starts processing data when this bit is set.
-      - `Bit 1`: done signal - The kernel asserts this signal when the processing is done.
-      - `Bit 2`: idle signal - The kernel asserts this signal when it is not processing any data.
- * One or more AXI4-Stream interfaces for streaming data between kernels.
+## 1. SDAccel カーネル インターフェイス要件に準拠した RTL デザインの作成
+SDAccel カーネルとして使用するには、RTL デザインは次の信号およびインターフェイス要件に準拠している必要があります。
+ * クロック。
+ * アクティブ Low リセット。
+ * グローバル メモリ用の 1 つ以上の AXI4-Lite メモリ マップド (MM) マスター インターフェイス。AXI4-Lite MM マスター インターフェイスにはすべて 64 ビット アドレスが必要です。
+   - グローバル メモリ空間の分割はユーザーが実行します。グローバル メモリの各パーティションがカーネル引数になります。各パーティションのメモリ オフセットは、AXI4-Lite MM スレーブ インターフェイスを介してプログラム可能な制御レジスタにより設定される必要があります。
+ * 1 つの AXI4-Lite MM スレーブ制御インターフェイス。AXI4-Lite インターフェイス名は **S_AXI_CONTROL** にする必要があります。
+    - AXI4-Lite MM スレーブのオフセット 0 には次の信号が必要です。
+      - `Bit 0`: 開始信号 - このビットがセットされていると、カーネルがデータ処理を開始します。
+      - `Bit 1`: 完了信号 - 処理が完了すると、この信号がアサートされます。
+      - `Bit 2`: アイドル信号 - どのデータも処理されていない場合、この信号がアサートされます。
+ * カーネル間でデータをストリーミングするための 1 つ以上の AXI4-Stream インターフェイス。
 
-A complete reference for interface requirements can be found in the [SDAccel User Guide](https://www.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#qnk1504034323350).
+インターフェイス要件の詳細は、[SDAccel 環境ユーザー ガイド](https://japan.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#qnk1504034323350)を参照してください。
 
-In this example, the RTL is already compliant and doesn't need to be modified.
+この例では、RTL は既にインターフェイス要件に準拠しているので、変更の必要はありません。
 
-The RTL code for this example is located in the `./src/hdl` directory.
+この例の RTL コードは `./src/hdl` ディレクトリにあります。
 
-## 2. Packaging the RTL Design as an SDAccel Kernel (XO file)  
-A fully packaged RTL Kernel is delivered as an XO file which has a file extension of `.xo`. This file is a container encapsulating a Vivado® IP object (including RTL source files) and a kernel description XML file. The XO file can be compiled into the platform and run in the SDAccel hardware or hardware emulation flows.
+## 2. RTL デザインを SDAccel カーネルとしてパッケージ (XO ファイル)  
+完全にパッケージされた RTL カーネルは、XO ファイルとして配布されます (拡張子は `.xo`)。このファイルは、Vivado® IP オブジェクト (RTL ソース ファイルを含む) およびカーネルを記述した XML ファイルを含むコンテナーです。XO ファイルはプラットフォームにコンパイルでき、SDAccel ハードウェアまたはハードウェア エミュレーション フローで実行できます。
 
-To package the kernel and create the XO file, you must:
-- Write a kernel description XML file.
-- Package the RTL as a Vivado IP suitable for use in IP Integrator.
-- Run the `package_xo` command to generate the XO file.
+カーネルをパッケージし、XO ファイルを作成するには、次の作業を実行する必要があります。
+- カーネル記述 XML ファイルを作成します。
+- IP インテグレーターで使用できるよう、RTL を IP としてパッケージします。
+- `package_xo` コマンドを実行して XO ファイルを生成します。
 
-#### Writing a Kernel Description XML File    
-A special XML file is needed to describe the interface properties of the RTL kernel. The format for the kernel XML file is described in the [Create Kernel Description XML File](https://www.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#rzv1504034325561) section of the documentation.
+#### カーネル記述 XML ファイルの作成    
+RTL カーネルのインターフェイス プロパティを記述するには、特別な XML ファイルが必要です。カーネル XML ファイルのフォーマットは、[カーネル記述 XML ファイルの作成](https://japan.xilinx.com/html_docs/xilinx2018_3/sdaccel_doc/creating-rtl-kernels-qnk1504034323350.html#rzv1504034325561)で説明されています。
 
-This XML file can be created manually or with the RTL Kernel Wizard. In this example, the XML file is already provided (`./src/kernel.xml`).
+この XML ファイルは、手動で、または RTL カーネル ウィザードを使用して作成できます。この例では、XML ファイルは既に提供されています (`./src/kernel.xml`)。
 
-- Look at the content of the file to familiarize yourself with the information captured in the XML description.
+- このファイルを開き、XML で記述されている情報を確認します。
 
-#### Packaging the RTL as a Vivado IP suitable for use in IP Integrator
-The example comes with the `./scripts/package_kernel.tcl` script which takes the existing RTL design and packages it as Vivado IP. The script places it in an IP directory called  `./packaged_kernel_${suffix}`, where `suffix` is specified as a user argument.    
+#### IP インテグレーターで使用できるよう、RTL を IP としてパッケージ
+この例では、既存の RTL デザインを Vivado IP としてパッケージする `./scripts/package_kernel.tcl` スクリプトを使用します。このスクリプトは、`./packaged_kernel_${suffix}` と呼ばれる IP ディレクトリにあり、`suffix` にはユーザー引数を指定します。    
 
-#### Running the package_xo command to Generate the XO File
-- In the `SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd` directory, run the following commands to package the RTL and create the XO file:   
+#### package_xo コマンドを実行して XO ファイルを生成
+- `SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd` ディレクトリで、RTL をパッケージし、XO ファイルを生成するため、次のコマンドを実行します。   
 
     ```bash
     vivado -mode tcl  
@@ -118,36 +118,36 @@ The example comes with the `./scripts/package_kernel.tcl` script which takes the
     Vivado% exit
     ```
 
-The `./src/rtl_vadd.xo` file gets generated. It contains all the necessary information SDAccel requires to use the kernel.
+`./src/rtl_vadd.xo` ファイルが生成されます。このファイルには、SDAccel でカーネルを使用するのに必要な情報がすべて含まれています。
 
-## 3. Compiling the Host Application and the FPGA Binary containing the RTL Kernel
-This section covers the following steps:
-   * Creating a new project in the SDAccel GUI
-   * Importing design files including the pre-generated .xo file
-   * Verifying the application using the hardware emulation flow
-   * Compiling the host application and the FPGA binary for hardware execution   
+## 3. ホスト アプリケーションおよび RTL カーネルを含んだ FPGA バイナリのコンパイル
+このセクションでは、次のステップについて説明します。
+   * SDAccel GUI での新規プロジェクトの作成
+   * あらかじめ生成されている XO ファイルを含むデザイン ファイルのインポート
+   * ハードウェア エミュレーション フローを使用したアプリケーションの検証
+   * ハードウェア実行用のホスト アプリケーションおよび FPGA バイナリのコンパイル   
 
-The host application code for this example is in the `./src/host.cpp` file.
+この例のホスト アプリケーション コードは `./src/host.cpp` ディレクトリにあります。
 
-In the SDAccel flow, the host code uses OpenCL APIs to interacts with the FPGA.
+SDAccel フローでは、FPGA との通信にホスト コードで OpenCL API が使用されます。
 
-### Creating a new Project in the SDAccel GUI
-- Open the SDx GUI by running the following command:
+### SDAccel GUI での新規プロジェクトの作成
+- 次のコマンドを実行し、SDx の GUI を起動します。
    ```bash
   sdx -worskpage Test_dir
   ```
-- In the **Welcome** window, select **Create SDx Project**
-- In the **Project Type** screen, select **Application**, and click **Next**.
-- Set the project name to **TEST_RTL_KERNEL**, and click **Next**.
-- In the **Platform** screen click **Add Custom Platform...** then browse into the ```/home/centos/src/project_data/aws-fpga/SDAccel/aws_platform``` directory, and then click **OK**.
-- Choose the newly added AWS VU9P F1 custom platform, and click **Next**.
-- In the **System configuration** screen keep the default settings, and click **Next**.
-- In the **Templates** screen select **Empty Application**, and click Finish.
+- **[Welcome]** ウィンドウで **[Create SDx Project]** をクリックします。
+- **[Project Type]** ページで **[Application]** をオンにして **[Next]** をクリックします。
+- プロジェクト名を **TEST_RTL_KERNEL** にして **[Next]** をクリックします。
+- **[Platform]** ページで **[Add Custom Platform]** をクリックし、```/home/centos/src/project_data/aws-fpga/SDAccel/aws_platform``` ディレクトリを指定して **[OK]** をクリックします。
+- 新しく追加した AWS VU9P F1 カスタム プラットフォームを選択して、**[Next]** をクリックします。
+- **[System Configuration]** のデフォルト設定をそのままにし、**[Next]** をクリックします。
+- **[Templates]** ページで **[Empty Application]** を選択し、**[Finish]** をクリックします。
 
-### Importing the Application Host Code and Kernel XO File.
-- Click the **Import Sources...** button ![](./images/ImportSRC.png) on the **Project Explorer** pane located in the left side of the GUI.
-- In the **Import Sources** screen, click the **Browse** button, select the **rtl_vadd/src** directory, and click **OK**.
-- In the right pane of the **Import Sources** screen, select the files listed below, then click **Finish**.
+### アプリケーションのホスト コードおよびカーネル XO ファイルのインポート
+- GUI の左側にある **[Project Explorer]** で **[Import Sources...]** ボタン ![](./images/ImportSRC.png) をクリックします。
+- **[Import Sources]** で **[Browse]** ボタンをクリックし、**[rtl_vadd/src]** ディレクトリを選択して、**[OK]** をクリックします。
+- **[Import Sources]** の右側で、次のファイルを選択し、**[Finish]** をクリックします。
     * `host.cpp`
     * `xcl2.cpp`
     * `xcl2.h`
@@ -155,46 +155,46 @@ In the SDAccel flow, the host code uses OpenCL APIs to interacts with the FPGA.
 
 ![](./images/STEP2-ImportFiles.png)  
 
-Your design sources have now been added to your project, as can be seen by expanding the **TEST_RTL_KERNEL > src** folder in the **Project Explorer** pane.
+**[Project Explorer]** の **[TEST_RTL_KERNEL > src]** フォルダーを展開すると、プロジェクトにデザイン ソースが追加されているのが確認できます。
 
-### Specifying the Binary Container for the Kernel Executable
-Now that you have imported your design files, you need to add a binary container and associated hardware function(s) to your project. The binary container is the output file (`.xclbin`) containing the output of the FPGA compilation process. A hardware function is a effectively an acceleration kernel. A binary container can contain one or more hardware functions. In this example, we have only one.
+### カーネル実行ファイルのバイナリ コンテナーの指定
+デザイン ファイルをインポートしたので、次は、バイナリ コンテナーおよび関連のハードウェア ファンクションをプロジェクトに追加する必要があります。バイナリ コンテナーは、FPGA コンパイル プロセスの出力を含む出力ファイル (`.xclbin`) です。ハードウェア ファンクションは、実質的にはアクセラレーション カーネルです。バイナリ コンテナーには、ハードウェア ファンクションを 1 つ以上含めることができます。このチュートリアルでは、1 つのみです。
 
-- Click the **Add Hardware Function...** button ![](./images/AddHW.png). This button is centrally located in the **Hardware Functions** section of the main **Project Settings** window.
+- **[Add Hardware Function...]** ボタン ![](./images/AddHW.png) をクリックします。このボタンは **[Application Project Settings]** の **[Hardware Functions]** セクションにあります。
 
 ![](./images/STEP2-AddHW.png)
 
-- SDAccel analyzes the input sources for all available kernels and recognizes the **krnl_vadd_rtl** kernel from the .xo file. Click **OK**.
+- SDAccel によりすべての使用可能なカーネルの入力ソースが解析され、XO ファイルの **krnl_vadd_rtl** カーネルが認識されます。**[OK]** をクリックします。
 
-Notice that a binary container is added to the project, and the **krnl_vadd_rtl** kernel is added to this container. The default name for the binary container is `binary_container_1`. Since the host application uses the `xcl::find_binary_file` utility function, it will automatically find the container by searching for a file with the default name.
+バイナリ コンテナーがプロジェクトに追加され、**krnl_vadd_rtl** カーネルがこのコンテナーに追加されています。バイナリ コンテナーのデフォルト名は `binary_container_1` です。ホスト アプリケーションで `xcl::find_binary_file` ユーティリティ関数が使用されるので、デフォルト名のファイルを検索して、このコンテナーが自動的に検出されます。
 
-### Verifying the Application using the Hardware Emulation Flow
-SDAccel provides three different build configurations:  
-* Software Emulation (`Emulation-SW`)
-* Hardware Emulation (`Emulation-HW`)
-* Hardware (`System`)
+### ハードウェア エミュレーション フローを使用したアプリケーションの検証
+SDAccel には次の 3 つのビルド コンフィギュレーションがあります。  
+* ソフトウェア エミュレーション (`Emulation-SW`)
+* ハードウェア エミュレーション (`Emulation-HW`)
+* ハードウェア (`System`)
 
-In **Emulation-SW** mode, the host application executes with a C/C++ or OpenCL model of the kernel(s). The main goal of this mode is to ensure the functional correctness of your application.
->**NOTE**: this mode is not presently supported for RTL kernels.
+**Emulation-SW** モードでは、カーネルの C/C++ または OpenCL モデルを使用して、ホスト アプリケーションが実行されます。このモードは、主に、アプリケーションが機能的に正しいことを確認するために使用されます。
+>**注記**: このモードは、RTL カーネル用には現在サポートされていません。
 
-In **Emulation-HW** mode, the host application executes with a RTL model of the kernel(s). This mode enables the programmer to check the correctness of the logic generated for the custom compute units and provides performance estimates.
+**Emulation-HW** モードでは、カーネルの RTL モデルを使用して、ホスト アプリケーションが実行されます。また、カスタム演算ユニット用に生成されたロジックが正しいかを確認し、パフォーマンスを見積もることができます。
 
-In **System** mode, the host application executes with the actual FPGA.
+**System** モードでは、実際の FPGA を使用してホスト アプリケーションが実行されます。
 
-- To run hardware emulation, go to the main **Project Settings** window, and ensure that **Active build configuration** is set to `Emulation-HW`.
+- ハードウェア エミュレーションを実行するには、**[Project Settings]** で **[Active build configuration]** を [`Emulation-HW`] に設定します。
 
 ![](./images/STEP2-BuildConfig.png)
 
-- To start the build process, click the **Build** button ![](./images/Build.png). The build process will take ~3-4 minutes to complete.
-- After the emulation build process completes, click the **Run** button ![](./images/Run.png) to run Hardware Emulation.
-- This example only takes a few seconds to run and you should see the following messages in the **Console** window indicating that the run successfully completed:
+- ビルド プロセスを開始するには、**[Build]** ボタン ![](./images/Build.png) をクリックします。このプロセスが完了するまで約 3 ～ 4 分かかります。
+- エミュレーション ビルド プロセスが完了したら、**[Run]** ボタン ![](./images/Run.png) をクリックしてハードウェア エミュレーションを実行します。
+- この例は実行に数秒しかかかりません。**[Console]** ウィンドウで、実行が完了したことを示す次の用なメッセージが表示されます。
     ```
     Found Platform
     Platform Name: Xilinx
     XCLBIN File Name: vadd
     INFO: Importing ../binary_container_1.xclbin
     Loading: '../binary_container_1.xclbin'
-    INFO: [SDx-EM 01] Hardware emulation runs simulation underneath. Using a large data set will result in long simulation times. It is recommended that a small dataset is used for faster execution. This flow does not use cycle accurate models and hence the performance data generated is approximate.
+    INFO: [SDx-EM 01] Hardware emulation runs simulation underneath.Using a large data set will result in long simulation times.It is recommended that a small dataset is used for faster execution.This flow does not use cycle accurate models and hence the performance data generated is approximate.
     TEST PASSED
     INFO: [SDx-EM 22] [Wall clock time: 13:05, Emulation time: 0.00385346 ms] Data transfer between kernel(s) and global memory(s)
     BANK0          RD = 2.000 KB               WR = 1.000 KB        
@@ -203,22 +203,22 @@ In **System** mode, the host application executes with the actual FPGA.
     BANK3          RD = 0.000 KB               WR = 0.000 KB  
     ```
 
-- The **Profile Summary** and  **Application Timeline** reports generated during the emulation run can be accessed through the **Assistant** window, in the bottom-left corner of the GUI.
+- エミュレーション実行中に生成された **[Profile Summary]** および **[Application Timeline]** レポートは、GUI の左下にある **[Assistant]** ウィンドウからアクセスできます。
 
 ![](./images/STEP2-Assistant.png)
 
-### Compiling the Host Application and the FPGA Binary for Hardware Execution   
-- To run hardware execution, set **Active build configuration** to **System** in the main **Project Settings** window.
-- Click the **Build** icon to initiate the hardware build process.
-    - For this example, the hardware build takes about one hour to finish
-    - The host executable (`TEST_RTL_KERNEL.exe`) and FPGA binary (`binary_container_1.xclbin`) are generated in the `Test_dir/TEST_RTL_KERNEL/System` directory.  
-- Exit the SDAccel GUI.
+### ハードウェア実行用のホスト アプリケーションおよび FPGA バイナリのコンパイル   
+- ハードウェアを実行するには、**[Application Project Settings]** で **[Active build configuration]** を **[System]** に設定します。
+- **[Build]** ボタンをクリックして、ハードウェア ビルド プロセスを開始します。
+    - この例の場合、ハードウェア ビルドは完了までに約 1 時間かかります。
+    - ホスト実行ファイル (`TEST_RTL_KERNEL.exe`) および FPGA バイナリ (`binary_container_1.xclbin`) は `Test_dir/TEST_RTL_KERNEL/System` ディレクトリで生成されます。  
+- SDAccel GUI を終了します。
 
-## 4. Creating the Amazon FPGA Image
-In order to execute the application on F1, an Amazon FPGA Image (AFI) must first be created from the FPGA binary (`.xclbin`).
->**Note**: Currently this step cannot be performed through the SDAccel GUI. The AFI is created using the AWS ```create_sdaccel_afi.sh``` command line script.
+## 4. Amazon FPGA イメージの作成
+F1 上でアプリケーションを実行するには、Amazon FPGA イメージ (AFI) をまず FPGA バイナリ (`.xclbin`) から作成する必要があります。
+>**注記**: 現在このステップは、SDAccel の GUI からは実行できません。AFI は、AWS の ```create_sdaccel_afi.sh``` コマンド ライン スクリプトを使用して作成されます。
 
-- Using the S3 bucket, S3 dcp folder, and S3 log folder information, execute the following command:
+- S3 バケット、S3 dcp フォルダー、S3 log フォルダーの情報を使用し、次のコマンドを実行します。
 
 ```bash
 cd ./Test_dir/TEST_RTL_KERNEL/System
@@ -230,18 +230,18 @@ SDACCEL_DIR/tools/create_sdaccel_afi.sh \
          -s3_logs_key=<logs-folder-name>
 ```
 
-The above step generates an `.awsxclbin` file and an `_afi_id.txt` file containing the ID of your AFI. The AFI ID can be used to check the status of the AFI generation process.  
+上記のステップで、AFI の ID を含んだ `.awsxclbin` ファイルおよび `_afi_id.txt` ファイルが生成されます。AFI 生成プロセスのステータスを確認するには、AFI ID を使用します。  
 
-- Note your AFI ID.
+- AFI ID をメモします。
 ```bash
   cat <timestamp>_afi_id.txt
 ```  
 
-- Check the status of the AFI generation process.
+- AFI 生成プロセスのステータスを確認します。
 ```bash
   aws ec2 describe-fpga-images --fpga-image-ids <AFI ID>
 ```
-The command will return **Available** when the AFI is created, registered, and ready use.	Otherwise, the command will return **Pending**.   
+AFI が作成され、登録され、使用準備が整った場合は、**Available** と返されます。	そうでない場合は、**Pending** と返されます。   
 
 ```json
   State: {
@@ -249,16 +249,16 @@ The command will return **Available** when the AFI is created, registered, and r
   }
 ```
 
-## 5. Executing the Host Application with the Amazon FPGA Image
+## 5. Amazon FPGA イメージを使用したホスト アプリケーションの実行
 
-After the AFI is **Available**, you can execute the application on the F1 instance.  
+AFI のステータスが **Available** になると、F1 インスタンスでアプリケーションを実行できます。  
 ```bash
 sudo sh
 source /opt/xilinx/xrt/setup.sh   
 ./TEST_RTL_KERNEL.exe
 ```
 
-You should see the following output:  
+次の内容が出力されるはずです。  
 
 ```bash
 Device/Slot[0] (/dev/xdma0, 0:0:1d.0)
@@ -272,21 +272,21 @@ Loading: './binary_container_1.awsxclbin'
 TEST PASSED
 ```
 
-Behind these deceptively simple log messages, a lot just happened. The application:
-- Detected the FPGA platform.
-- Loaded the ```binary_container_1.awsxclbin``` container.
-- Retrieved the AFI ID from the container and requested that the corresponding AFI be downloaded in the FPGA.
-- Created buffers in the FPGA and transferred two vectors (A and B).
-- Triggered the FPGA kernel to sum the two vectors (A and B).
-- Read the results back and checked them for correctness.
+ログのメッセージは非常に簡潔ですが、次のことが実際に実行されています。アプリケーション:
+- FPGA プラットフォームの検出。
+- ```binary_container_1.awsxclbin``` コンテナーの読み込み。
+- コンテナーからの SFI ID の読み出しと、対応する AFI を FPGA にダウンロードするリクエスト。
+- FPGA でのバッファーの作成と、2 つのベクター (A および B) の転送。
+- 2 つのベクター (A および B) の和を計算するための FPGA カーネルのトリガー。
+- 結果値のリードバックと、その確認。
 
-This concludes this tutorial on how to run your first SDAccel program on AWS F1 using RTL kernels.
+これでこのチュートリアルは終了で、RTL カーネルを使用した AWS F1 での最初の SDAccel プログラムの実行方法を学びました。
 
-Do not forget to stop or terminate your instance.
+ここで停止するか、インスタンスを終了させてください。
 <hr/>
 <p align="center"><b>
-<a href="STEP3.md">NEXT: Develop Your Knowledge on the SDAccel RTL Flow</a>
+<a href="STEP3.md">次へ: SDAccel RTL フローに関する知識を深める</a>
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019-2019 Xilinx</sup></p>

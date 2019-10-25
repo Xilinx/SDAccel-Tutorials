@@ -1,132 +1,132 @@
-# Creating, Configuring, and Testing an AWS F1 Instance
+# AWS F1 インスタンスの作成、設定、テスト
 
-This module guides you through the following steps:
+このモジュールでは、次の手順を実行します。
 
-1. [Creating an EC2 F1 Instance from the AWS Console](#1-creating-an-ec2-f1-instance-from-the-aws-console)
-2. [Connecting to the Instance with a remote desktop client](#2-connecting-to-the-instance-with-a-remote-desktop-client)
-3. [Configuring the Instance for Working with SDAccel](#3-configuring-the-instance-for-working-with-sdaccel)
-4. [Running the SDAccel 'Hello World' Example on AWS F1](#4-running-the-sdaccel-hello-world-example-on-aws-f1)
-5. [Closing the Session](#5-closing-the-session)
+1. [AWS コンソールから EC2 F1 インスタンスを作成](#1-creating-an-ec2-f1-instance-from-the-aws-console)
+2. [リモート デスクトップ クライアントを使用してインスタンスへ接続](#2-connecting-to-the-instance-with-a-remote-desktop-client)
+3. [SDAccel で使用できるようにインスタンスを設定](#3-configuring-the-instance-for-working-with-sdaccel)
+4. [AWS F1 で SDAccel 'Hello World' 例を実行](#4-running-the-sdaccel-hello-world-example-on-aws-f1)
+5. [セッションを閉じる](#5-closing-the-session)
 
->**IMPORTANT**: You should only start this module after successfully completing the [**Prerequisites**](Prerequisites-for-working-with-SDAccel-on-AWS-F1.md) section of this _Getting Started_ guide.
+>**重要**: このモジュールは、[**使用条件**](../PREREQUISITES/README.md) セクションを実行してから開始するようにしてください。
 
-## 1. Creating an EC2 F1 Instance from the AWS Console
+## 1. AWS コンソールから EC2 F1 インスタンスを作成
 
-#### Step 1: Launch the Instance
-1. Navigate to the AWS EC2 dashboard: [https://console.aws.amazon.com/ec2](https://console.aws.amazon.com/ec2).
-2. In the top right corner, select a region with F1 instances, such as **US West (Oregon)**.
-3. Click **Launch Instance**.
+#### 手順 1: インスタンスを起動
+1. AWS EC2 ダッシュボード ([https://console.aws.amazon.com/ec2](https://console.aws.amazon.com/ec2)) に移動します。
+2. 右上の F1 インスタンスのリージョン (**[US West (Oregon)]** など) を選択します。
+3. **[Launch Instance]** をクリックします。
 
-#### Step 2: Choose an Amazon Machine Image (AMI)
-1. Click **AWS Marketplace** (on the left pane, this is the second item under Quick Start).
-2. Search for **FPGA**.
-3. Select the **FPGA Developer AMI**.
-4. A dialog box opens, showing rates for each instance type.
-5. Click **Continue**.
+#### 手順 2: Amazon マシン イメージ (AMI) を選択
+1. **[AWS Marketplace]** (左側の [Quick Start] の下の 2 つ目の項目) をクリックします。
+2. **FPGA** を検索します。
+3. **[FPGA Developer AMI]** を選択します。
+4. ダイアログ ボックスが開き、各インスタンス タイプのレートが表示されます。
+5. **[Continue]** をクリックします。
 
-#### Step 3: Select an Instance Type
-1. Select a **f1.2xlarge** instance.
-2. Click **Next: Configure Instance Details**.
->**NOTE**: Do not click **Review and Launch**.
+#### 手順 3: インスタンス タイプを選択
+1. **f1.2xlarge** インスタンスを選択します。
+2. **[Next: Configure Instance Details]** をクリックします。
+>**注記**: **[Review and Launch]** はクリックしないでください。
 
-#### Step 4: Configure Your Instance
-1. Click **Next: Add Storage** (no need to change the default settings).
-2. Click **Next: Add tags** (no need to change the default settings).
-3. Click **Next: Configure Security group** (no need to change the default settings).
+#### 手順 4: インスタンスを設定
+1. **[Next: Add Storage]** をクリックします (デフォルト設定を変更する必要はありません)。
+2. **[Next: Add tags]** をクリックします (デフォルト設定を変更する必要はありません)。
+3. **[Next: Configure Security group]** をクリックします (デフォルト設定を変更する必要はありません)。
 
-#### Step 5: Configure the Security Group
-In this step, you modify the security group attached to the instance to allow inbound RDP requests over TCP port # 3389. This is required to work with the Remote Desktop GUI session.
-1. Click **Add Rule** to create a new security rule with the following properties:
-   - **Type**: RDP
-   - **Protocol**: TCP (default value)
-   - **Port Range**: 3389 (default value)
-   - **Source**:  Custom - 0.0.0.0/0
-2. Click **Review and Launch**.
+#### 手順 5: セキュリティ グループを設定
+ここでは、TCP ポート # 3389 を使用してインバウンド RDP リクエストができるように、インスタンスに添付されるセキュリティ グループを変更します。リモート デスクトップ GUI セッションを使用するには、これを必ず変更しておく必要があります。
+1. **[Add Rule]** をクリックして、次のプロパティで新しいセキュリティ規則を作成します。
+   - **[Type]**: RDP
+   - **[Protocol]**: TCP (デフォルト値)
+   - **[Port Range]**: 3389 (デフォルト値)
+   - **[Source]**: Custom - 0.0.0.0/0
+2. **[Review and Launch]** をクリックします。
 
-#### Step 6: Review Your Instance
-1. Click **Launch**.
-2. Select an existing key pair or create a new key pair.
-3. Click the check box at the bottom of the dialog box.
-4. Click **Launch Instances**.
+#### 手順 6: インスタンスを確認
+1. **[Launch]** をクリックします。
+2. 既存キー ペアを選択するか、新しいキー ペアを作成します。
+3. ダイアログ ボックス一番下のチェック ボックスをオンにします。
+4. **[Launch Instance]** をクリックします。
 
-#### Step 7: Check the Status of Your Instance
-1. When ready, at the bottom of the page, select **View Instances**.
-2. In the bottom pane, note the IPv4 Public DNS and Public IP address of the instance.
->**IMPORTANT**: You will need these addresses to connect to your instance.
+#### 手順 7: インスタンスのステータスをチェック
+1. 準備ができたら、ページ一番下の **[View Instances]** をクリックします。
+2. 一番下のペインに表示されるインスタンスの [IPv4 Public DNS] および [Public IP] アドレスをメモしておいてください。
+>**重要**: これらのアドレスは、インスタンスへの接続に必要となります。
 
-When the status of the newly launched instance switches to green (Running), you are ready to connect to it.
+新しく起動したインスタンスのステータスが緑 (実行中) に変わったら、接続する準備ができています。
 <br>
 
-## 2. Connecting to the Instance with a remote desktop client
+## 2. リモート デスクトップを使用してインスタンスへ接続
 
-#### Step 1: Connect to the Instance using SSH (Linux) or PuTTY (Windows)
+#### 手順 1: SSH (Linux) または PuTTY (Windows) を使用してインスタンスへ接続
 
-Connect to the instance using one of the following commands:
+次のコマンドのいずれかを使用してインスタンスへ接続します。
 
-* If you are connecting from a Linux machine, use SSH to connect:
+* Linux コンピューターから接続する場合は、SSH を使用して接続します。
 ```bash
 ssh -i <AWS key pairs.pem> -ssh centos@<public IP address of EC2 instance> 22
 ```
 
-* If you are connecting from a Windows machine, use PuTTY to connect:
+* Windows コンピューターから接続する場合は、PuTTY を使用して接続します。
 ```bash
 putty -i <AWS key pairs.ppk> -ssh centos@<public IP address of EC2 instance> 22
 ```
 
-Where:
-- `<AWS key pairs\>` is the full path to the `.pem` (SSH) or `.ppk` (PuTTY) file containing the key pairs.
-- `<public DNS of EC2 instance\>` is the Public DNS of the instance.
-- The user name is always **centos**.
-- The connection type is always **SSH**.
-- The port is always **22**.
+説明:
+- `<AWS key pairs\>` は、キー ペアを含む `.pem` (SSH) または `.ppk` (PuTTY) ファイルへのフル パスです。
+- `<public DNS of EC2 instance\>` はインスタンスのパブリック DNS です。
+- ユーザー名は常に **centos** です。
+- 接続タイプは常に **SSH** です。
+- ポートは常に **22** です。
 
-You are now connected to the EC2 instance.
+これで EC2 インスタンスに接続できるようになりました。
 
 
-#### Step 2: Set up GUI Services on the Instance
+#### 手順 2: インスタンスの GUI サービスを設定
 
-The FPGA Developer AMI does not include a GUI desktop application. In these steps, you install the Gnome window manager and start remote desktop protocol (RDP) services to allow remote desktop connections.
+FPGA Developer AMI には GUI デスクトップ アプリケーションが含まれません。この手順では、Gnome ウィンドウ マネージャーをインストールしてリモート デスクトップ プロトコル (RDP) サービスを開始し、リモート デスクトップ接続ができるようにします。
 
-1. Execute the following commands from the command line of the instance terminal:
+1. インスタンス ターミナルのコマンド ラインから次のコマンドを実行します。
 ```bash
 source <(curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Scripts/setup_gui.sh)
 ```
 
-The script takes about 10 minutes to run and finishes by setting a password for the 'centos' user.
+このスクリプトの実行には約 10 分かかります。最後に `centos` ユーザー用のパスワードを設定して終了します。
 
- **IMPORTANT**: Take note of the password generated by the script. You will need it to connect using RDP.
-2. Return to the **AWS EC2 dashboard** in your web browser.
-3. Select your instance, then from the **Actions** menu, select **Instance State** and then select **Reboot**.
-4. Wait a couple of minutes for the instance to complete the reboot cycle.
+ **重要**: スクリプトで生成されるパスワードはメモしておきます。RDP を使用して接続する際に必要となります。
+2. ウェブ ブラウザーで **[AWS EC2 dashboard]** に戻ります。
+3. インスタンス名を選択したら、**[Actions]** → **[Instance State]** → **[Reboot]** をクリックします。
+4. インスタンスがリブート サイクルを終了するまで数分待ちます。
 
-After you have completed this step, you are ready to connect to the instance using a remote desktop client.
+終了したら、リモート デスクトップ クライアントを使用してインスタンスを接続できるようになります。
 
-#### Step 3: Connect to the Instance with a Remote Desktop Client
+#### 手順 3: リモート デスクトップ クライアントを使用してインスタンスへ接続
 
-1. From your local machine, start a remote desktop protocol (RDP) client
-  - On Windows: press the **Windows** key and type **mstsc.exe** in the Windows run prompt.
-  - On Linux: use an RDP client, such as Remmina or Vinagre.
-  - On macOS: use the Microsoft Remote Desktop v8.0.43 from the Mac App Store. That version offers color depth settings.
->**IMPORTANT**: Set your RDP client to use **24-bit for color depth**.
-  - On Windows: In the bottom-left corner of connection prompt, click **Options**, then click the **Display** tab and set Colors to **True Colors (24 bit)**.
-* In the RDP client, enter the **IPv4 Public IP** of your instance.
-* Click **Connect**. A dialog box regarding connection certificates opens.
-* Click **Yes** to dismiss the message. The Remote Desktop Connection window opens with a login prompt.
-* Log in with the following credentials:
-    - User: **centos**
-    - Password: *password generated by the `set_gui.sh` script*
-* Click **Ok**.
+1. ローカル コンピューターからリモート デスクトップ プロトコル (RDP) クライアントを開始します。
+  - Windows の場合: **Windows** キーを押して、プロンプトに **「mstsc.exe」**と入力します。
+  - Linux の場合: Remmina や Vinagre などの RDP クライアントを使用します。
+  - macOS の場合: Mac アプリ ストアからの Microsoft Remote Desktop v8.0.43 を使用します。このバージョンでは色深度設定が可能になっています。
+**重要**: RDP クライアントで**色深度 24 ビット**が使用されるように設定します。
+  - Windows の場合: 接続プロンプトの左下の **[Options]** をクリックし、**[Display]** タブで [Colors] を **[True Colors (24 bit)]** に設定します。
+* RDP クライアントでインスタンスの「IPv4 Public IP」を入力します。
+* **[Connect]** をクリックします。接続証明を表示するダイアログ ボックスが開きます。
+* **[Yes]** をクリックしてメッセージを消します。[Remote Desktop Connection] ウィンドウのログイン画面が表示されます。
+* 次を使用してログインします。
+    - ユーザー名: **centos**
+    - パスワード: *`set_gui.sh` スクリプトで生成されたパスワード*
+* **[OK]** をクリックします。
 
-You are now connected to the instance running Centos 7 and the FPGA Developer AMI.
+これで Centos 7 および FPGA Developer AMI を実行する F1 インスタンスに接続できました。
 
-## 3. Configuring the Instance for Working with SDAccel
+## 3. SDAccel で使用できるようにインスタンスを設定
 
-#### Step 1: Configure the AWS Command Line Interface (CLI)
+#### 手順 1: AWS コマンド ライン インターフェイス (CLI) を設定
 
-To successfully create Amazon FPGA Images, you must have the AWS CLI properly configured.
+Amazon FPGA イメージを作成するには、AWS CLI を正しく設定する必要があります。
 
-1. Open a new terminal by right-clicking anywhere in the Desktop area and selecting **Open Terminal**.
-2. Configure the AWS CLI as follows:
+1. デスクトップ エリアで右クリックして **[Open Terminal]** をクリックし、新しいターミナルを開きます。
+2. AWS CLI は次のように設定します。
 ```bash
 $ aws configure
 AWS Access Key ID [None]: <your access key>
@@ -135,67 +135,67 @@ Default region name [None]: <your AWS region, for instance us-west-2 for Oregon>
 Default output format [None]: json
 ```
 
-#### Step 2: Configure the SDAccel Environment
+#### 手順 2: SDAccel 環境を設定
 
-In this step, you install the necessary files to build and execute applications on AWS F1. This includes the SDAccel&tm; platform, runtime and drivers.
+ここでは、AWS F1 でアプリケーションをビルドして実行するのに必要なファイルをインストールします。必要なファイルは、SDAccel&tm; プラットフォーム、ランタイム、ドライバーなどです。
 
-1. Execute the following commands from the command line of the instance terminal:
+1. インスタンス ターミナルのコマンド ラインから次のコマンドを実行します。
     ```bash
     git clone https://github.com/aws/aws-fpga.git $AWS_FPGA_REPO_DIR  
     cd $AWS_FPGA_REPO_DIR                                         
     source sdaccel_setup.sh
     ```
->**NOTE**: Sourcing sdaccel_setup.sh takes a couple of minutes, because the first time you run it, the script will download the platform and compile the runtime and drivers. Subsequent runs are much faster. You must source sdaccel_setup.sh each time you open a new terminal as it sets the necessary environment variables to run SDAccel.  
-2. Close the terminal.
+>**注記**: sdaccel_setup.sh は、最初に実行する際にプラットフォームをダウンロードして、ランタイムおよびドライバーをコンパイルするので、読み込むのに数分かかります。2 回目からはかなり速くなります。sdaccel_setup.sh では SDAccel を実行するのに必要な環境変数が設定されるので、新しいターミナルを開くたびに、sdaccel_setup.sh を読み込む必要があります。  
+2. ターミナルを閉じます。
 
-## 4. Running the SDAccel 'Hello World' Example on AWS F1
+## 4. SDAccel の 'Hello World' 例を AWS F1 で実行
 
-This final section explains how run the SDAccel `helloworld_ocl` example on AWS F1 and confirm that the environment is properly configured.
+この最後のセクションでは、AWS F1 で SDAccel の `helloworld_ocl` 例を実行し、環境が正しく設定されているかどうかを確認します。
 
-#### Step 1: Set Up the SDAccel Environment
+#### 手順 1: SDAccel 環境を設定
 
-1. Open a new terminal window.
-2. Execute the following commands to set-up the SDAccel environment:
+1. 新しいターミナル ウィンドウを開きます。
+2. 次のコマンドを実行して、SDAccel 環境を設定します。
 ```bash
 cd $AWS_FPGA_REPO_DIR  
 source sdaccel_setup.sh
 ```
 
-#### Step 2: Build and Run the Emulation Flows
+#### 手順 2: エミュレーション フローをビルドして実行
 
-The SDAccel emulation flows allows testing, profiling, and debugging the application before deploying it on F1.
+SDAccel エミュレーション フローでは、F1 でアプリケーションを運用する前に、テスト、プロファイル、デバッグができます。
 
-1. Run the SW Emulation flow for the SDAccel 'hello world' example:
+1. SDAccel の 'hello world' 例でソフトウェア エミュレーション フローを実行します。
 ```bash
 cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
 make clean
 make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 ```
 
-2. Run the HW Emulation flow for the SDAccel 'hello world' example:
+2. SDAccel の 'hello world' 例でハードウェア エミュレーション フローを実行します。
 ```bash
 cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
 make clean
 make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 ```
 
-#### Step 3: Build the Host Application and FPGA Binary to Execute on F1
+#### 手順 3: ホスト アプリケーションと FPGA バイナリをビルドして F1 で実行
 
-To execute on F1, the following files need to be built:
-- Host application
-- AWS FPGA binary
-- Amazon FPGA Image (AFI)
+F1 で実行するには、次のファイルをビルドする必要があります。
+- ホスト アプリケーション
+- AWS FPGA バイナリ
+- Amazon FPGA イメージ (AFI)
 
-Building these files is a two-step process. First SDAccel is used to build the host application and the Xilinx&reg; FPGA binary. Then the AWS create_sdaccel_afi.sh script is used to create the AFI and AWS FPGA binary from the Xilinx FPGA binary.
+これらのファイルは、次の 2 つのプロセスでビルドできます。まず SDAccel を使用してホスト アプリケーションとザイリンクス FPGA バイナリを作成します。次に AWS の `create_sdaccel_afi.sh` スクリプトを使用して、ザイリンクス FPGA バイナリから AFI と AWS FPGA バイナリを作成します。
 
-1. Build the host application and the &ast;.xclbin (Xilinx FPGA binary file):
+1. ホスト アプリケーションと &ast;.xclbin (ザイリンクス FPGA バイナリ ファイル) をビルドします。
 ```bash
 cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
 make clean
 make TARGETS=hw DEVICES=$AWS_PLATFORM all
 ```
 
-2. Create the AWS FPGA binary and AFI from the `*.xclbin` (Xilinx FPGA binary file):
+2. AWS FPGA バイナリと AFI を `*.xclbin` (ザイリンクス FPGA バイナリ ファイル) から作成します。
 ```bash
 cd xclbin
 $SDACCEL_DIR/tools/create_sdaccel_afi.sh \
@@ -205,26 +205,26 @@ $SDACCEL_DIR/tools/create_sdaccel_afi.sh \
 	  -s3_logs_key=<logs-folder-name>
 ```
 
-The `create_sdaccel_afi.sh` script does the following:
-1. Starts a background process to create the AFI.
-2. Generates a `<timestamp>_afi_id.txt` file, which contains the FPGA Image Identifier (or AFI ID) and Global FPGA Image Identifier (or AGFI ID) of the generated AFI
-3. Creates the `*.awsxclbin` AWS FPGA binary file which will need to be read by the host application to determine which AFI should be loaded in the FPGA.
+`create_sdaccel_afi.sh` スクリプトは、次を実行します。
+1. AFI を作成するバックグラウンド プロセスを開始します。
+2. 生成した AFI の FPGA Image Identifier (AFI ID) および Global FPGA Image Identifier (AGFI ID) を含む `<timestamp>_afi_id.txt` ファイルを生成します。
+3. ホスト アプリケーションがどの AFI を FPGA に読み込むかを指定する `*.awsxclbin` AWS FPGA バイナリ ファイルを作成します。
 
-#### Step 4: Wait for Completion of the AFI Creation Process
+#### 手順 4: AFI 作成プロセスの終了を待機
 
-The AFI creation process that started in the background is not instantaneous. You must make sure that the process completes successfully before it is able to run on the F1 instance.
+バックグラウンドで開始された AFI の作成プロセスは、すぐには終了しません。プロセスが問題なく終了してからでないと、F1 インスタンスで実行できません。
 
-1. Note the values of the AFI IDs by opening the `<timestamp>_afi_id.txt` file:
+1. `<timestamp>_afi_id.txt` ファイルを開いて、AFI ID の値をメモします。
 ```bash
 cat *.afi_id.txt
 ```
 
-2. Use the describe-fpga-images API to check the status AFI generation process.
+2. describe-fpga-images API を使用して、AFI 生成プロセスのステータスを確認します。
 ```bash
 aws ec2 describe-fpga-images --fpga-image-ids <AFI ID>
 ```
 
-3. When AFI creation completes successfully, the output should contain:
+3. AFI が問題なく作成されたら、次が表示されます。
 ```json
 ...
 "State": {
@@ -233,11 +233,11 @@ aws ec2 describe-fpga-images --fpga-image-ids <AFI ID>
 ...
 ```
 
-4. Wait until the AFI becomes available before proceeding to execute the application on the F1 instance.
+4. F1 インスタンスでアプリケーションを実行する前に、AFI が使用可能になるのを待ちます。
 
-#### Step 5: Execute the Host Application
+#### 手順 5: ホスト アプリケーションを実行
 
-1. Execute the following commands in the instance terminal:
+1. インスタンス ターミナルで次のコマンドを実行します。
 ```bash
 cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
 sudo sh
@@ -245,7 +245,7 @@ source /opt/xilinx/xrt/setup.sh
 ./helloworld
 ```
 
-2. The example application displays the following messages:
+2. このアプリケーション例の場合、次のメッセージが表示されます。
 
     ```bash
     Device/Slot[0] (/dev/xdma0, 0:0:1d.0)
@@ -278,24 +278,24 @@ source /opt/xilinx/xrt/setup.sh
 	sh-4.2#
 	```
 
-## 5. Closing the Session
+## 5. セッションを閉じる
 
-After you have finished your session, you can either **Stop** or **Terminate** your instance.  
+セッションを終了したら、インスタンスで **[Stop]** または **[Terminate]** をクリックします。  
 
-If you **Terminate** the instance, its root volume will be deleted. You must create and configure a new instance the next time you need to work on F1.
+インスタンスを **[Terminate]** すると、インスタンスのルート ボリュームが削除されます。次に F1 インスタンスを使用する必要がある場合は、新しいインスタンスを作成および設定する必要があります。
 
-It you **Stop** the instance, the root volume is preserved and the stopped instance can be restarted later. Connecting is then as simple as starting a new RDP client session as outlined in this guide. You do not need to go through the configuration steps anymore. AWS does not charge for stopped instances, but might charge you for any EBS volume attached to the instance.
+インスタンスを **[Stop]** すると、ルート ボリュームを保持したまま、停止したインスタンスを後で再起動できます。接続は、このガイドで簡単に説明したように、新しい RDP クライアント セッションを開始するのと同じくらいシンプルになります。設定手順をやり直す必要はありません。AWS は停止したインスタンスに対して請求はしませんが、そのインスタンスにつながっている EBS ボリュームに対しては請求する可能性があります。
 
-1. Close the remote session.
-2. Return to the EC2 Dashboard: [https://console.aws.amazon.com/ec2](https://console.aws.amazon.com/ec2).
-3. Click **Running Instances** in the main window.
-4. Select your instance.
-5. Click the **Actions** drop-down menu, select **Instance State**, and then click **Stop** or **Terminate**.
+1. リモート セッションを閉じます。
+2. EC2 ダッシュボード [https://console.aws.amazon.com/ec2](https://console.aws.amazon.com/ec2) に戻ります。
+3. メイン ウィンドウで **[Running Instances]** をクリックします。
+4. インスタンスを選択します。
+5. **[Actions]** ドロップダウン リストをクリックし、**[Instance State]** を選択して、**[Stop]** または **[Terminate]** をクリックします。
 
 <hr/>
 <p align="center"><b>
-<a href="STEP2.md">NEXT: Run your first SDAccel program on AWS F1</a>
+<a href="STEP2.md">次の演習: AWS F1 で最初の SDAccel プログラムを実行</a>
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019-2019 Xilinx</sup></p>

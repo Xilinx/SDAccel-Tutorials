@@ -1,57 +1,57 @@
-# Practice and Experiment with RTL Kernels
+# RTL カーネルを使用した演習
 
-Apply and practice what you've learned in the earlier steps of this guide by running more hands-on examples. Familiarize yourself with online resources relating to the SDAccel™ environment, and make your way to the [AWS forum](https://forums.aws.amazon.com/forum.jspa?forumID=243) to search for knowledge and find answers.
+ここでは、このガイドのこれまでのステップで学んだことを、さらに実践的な例を実行して練習します。まずは SDAccel™ 環境に関連したオンライン リソースにどんなものが用意されているかを知り、[AWS フォーラム](https://forums.aws.amazon.com/forum.jspa?forumID=243)を利用してさらに詳しい情報を検索します。
 
-## Experiment with Other Examples
+## その他の例を使用した演習
 
-Running and experimenting with the following three examples of RTL kernels will help you further familiarize yourself with the RTL kernel flow.
+次の 3 つの RTL カーネル例を実行しながら、さらに RTL カーネル フローについて学びます。
 
-#### Example 1: Vector Addition with two Clocks
+#### 例 1: クロックを 2 つ使用したベクターの加算
 
-This example shows vector addition performed by an RTL kernel with two clocks and the use of the `--kernel_frequency` XOCC option.
+この例では、クロックを 2 つと、`--kernel_frequency` XOCC オプションを使用して、RTL カーネルでベクターを加算します。
 
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2clks) from the SDAccel GitHub repository.
-
-
-
-#### Example 2: Vector Addition with two Kernels
-
-This example shows how create an accelerated design using more than one RTL Kernel. In this example, Vector Addition is performed with two kernels (Kernel_0 and Kernel_1) which perform vector addition. Kernel_1 reads the output from Kernel_0 as one of two inputs.
-
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2kernels) from the SDAccel GitHub repository.
-
-#### Example 3: High-Performance Matrix Multiply with precompiled XO file and advanced Vivado™ implementation options
-
-This example implements a high-performance matrix multiplication of two input matrices (A*B=C). The matrix multiplication kernel operates on matrices of type int16 and produces int16 results. Internally, the kernel has a systolic array of 2048 DSP units and is attached to two DDR banks. The DSP array runs at 400 MHz, whereas the logic around the array runs at 300 MHz.
-
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/acceleration/high_perf_mat_mult) from the SDAccel GitHub repository.
-
-
-## Get Support and Troubleshoot Issues
-
-The [AWS F1 SDAccel Development forum](https://forums.aws.amazon.com/forum.jspa?forumID=243) is the place to look for answers, share knowledge and get support. Make sure to subscribe to the forum by clicking the **Watch Forum** link in the Available Actions section.
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2clks) をダウンロードして実行します。
 
 
 
-## Learn More about SDAccel
+#### 例 2: カーネルを 2 つ使用したベクターの加算
 
-#### SDAccel QuickTake Video Tutorials
+この例では、2 つ以上の RTL カーネルを使用したアクセラレートされたデザインを作成します。2 つのカーネル (Kernel_0 および Kernel_1) を使用して、ベクターを加算します。Kernel_1 には Kernel_0 からの出力が読み込まれます (2 入力が 1 入力として読み込まれる)。
 
-* [Fundamental Concepts of Application Host Code](https://www.xilinx.com/video/hardware/concepts-of-application-host-code.html)
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/rtl_kernel/rtl_vadd_2kernels)をダウンロードして実行します。
 
-* [Introduction to the SDAccel RTL Kernel Wizard](https://www.xilinx.com/video/software/intro-sdaccel-rtl-kernel-wizard.html)
+#### 例 3: あらかじめコンパイルされた XO ファイルおよびアドバンスド Vivado™ インプリメンテーション オプションを使用したハイ パフォーマンス行列乗算
 
-#### Documentation for SDAccel v2018.3
+この例では、2 入力行列のハイ パフォーマンス行列乗算 (A*B=C) をインプリメントします。行列乗算のカーネルは、int16 型の行列で演算を実行し、int16 型の結果値を出力します。内部的には、カーネルに 2048 個の DSP ユニットがあるシストリック配列があり、2 つの DDR バンクが接続されています。DSP 配列は 400 MHz で実行されますが、この配列周辺のロジックは 300 MHz で実行されます。
 
-* _SDx Development Environment Release Notes, Installation, and Licensing Guide_ ([UG1238](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1238-sdx-rnil.pdf))
-* _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1023-sdaccel-user-guide.pdf))
-* _SDAccel Environment Optimization Guide_ ([UG1207](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1207-sdaccel-optimization-guide.pdf))
-* _SDAccel Environment Tutorial_ ([UG1021](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1021-sdaccel-intro-tutorial.pdf))
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/acceleration/high_perf_mat_mult)をダウンロードして実行します。
+
+
+## サポートを利用して問題をトラブルシュート
+
+[AWS F1 SDAccel 開発フォーラム](https://forums.aws.amazon.com/forum.jspa?forumID=243)は、質問をし合ったり、知識を共有したり、サポートを得るための場です。[Available Actions] セクションにある **[Watch Forum]** リンクをクリックして、このフォーラムを購読するようにしてください。
+
+
+
+## SDAccel についてさらに学ぶ
+
+#### SDAccel QuickTake ビデオ チュートリアル
+
+* [アプリケーション ホスト コードの基本概念](https://japan.xilinx.com/video/hardware/concepts-of-application-host-code.html)
+
+* [SDAccel RTL カーネル ウィザードの概要](https://www.youtube.com/watch?v=IZQ1A2lPXZk)
+
+#### SDAccel v2018.3 の資料
+
+* 『SDx 環境リリース ノート、インストール、およびライセンス ガイド』 ([UG1238](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1238-sdx-rnil.pdf))
+* 『SDAccel 環境ユーザー ガイド』 ([UG1023](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1023-sdaccel-user-guide.pdf))
+* 『SDAccel 環境プロファイリングおよび最適化ガイド』 ([UG1207](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1207-sdaccel-optimization-guide.pdf))
+* 『SDAccel 設計手法ガイド』 ([UG1021](https://japan.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1346-sdaccel-methodology-guide.pdf))
 
 <hr/>
 <p align="center"><b>
-<a href="STEP5.md">NEXT: Install and Run SDAccel on your own Machine</a>
+<a href="STEP5.md">次へ: コンピューターに SDAccel をインストールして実行</a>
 </b></p>
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019-2019 Xilinx</sup></p>

@@ -1,53 +1,55 @@
-# Practice and Experiment with C/OpenCL Kernels
+# C/OpenCL カーネルを使用した演習
 
-Apply and practice what you've learned in the earlier steps of this guide by running more hands-on examples. Familiarize yourself with online resources relating to the SDAccel™ environment, and make your way to the [AWS forum](https://forums.aws.amazon.com/forum.jspa?forumID=243) to search for knowledge and find answers.
+ここでは、このガイドのこれまでのステップで学んだことを、さらに実践的な例を実行して練習します。まずは SDAccel™ 環境に関連したオンライン リソースにどんなものが用意されているかを知り、[AWS フォーラム](https://forums.aws.amazon.com/forum.jspa?forumID=243)を利用してさらに詳しい情報を検索します。
 
-## Experiment with Other Examples
+## その他の例を使用した演習
 
-Running and experimenting with these three examples of the C/OpenCL™ kernels allows you to further familiarize yourself with good coding practices and kernel optimization techniques.
+C/OpenCL™ カーネルの 3 つの例を使用した演習では、適切なコード記述方法やカーネル最適化のテクニックをさらに詳しく学ぶことができます。
 
-### Loop Pipelining
-This example demonstrates how loop pipelining can be used to improve the performance of a kernel.
+### ループのパイプライン処理
 
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_pipeline_ocl) from the SDAccel GitHub repository.
+この例では、カーネルのパフォーマンスを改善する目的で、ループのパイプライン処理を使用する方法を学びます。
 
-### Reordering Loops
-This example demonstrates how loop reordering can be used to improve the performance of a kernel.
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_pipeline_ocl)をダウンロードして実行します。
 
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_reorder_c) from the SDAccel GitHub repository.
+### ループの再順序付け
 
-### Loop Fusion
-This example demonstrates how to fuse two loops into one to improve the performance of an OpenCL kernel.
+この例では、カーネルのパフォーマンスを改善する目的で、ループの再順序付けを使用する方法を学びます。
 
-Download and run [this example](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_fusion_c) from the SDAccel GitHub repository.
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_reorder_c)をダウンロードして実行します。
 
-### Additional Examples
-The Xilinx Github repository contains more than 80 examples to help you learn. Browse the repository to find more examples of interest, starting with more coding and optimization examples.
+### ループの融合 (ループ フュージョン)
 
-Browse other [OpenCL kernel coding and optimization examples](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt).
+この例では、OpenCL カーネルのパフォーマンスを改善する目的で、2 つのループを 1 つに置き換える方法を学びます。
 
-<br>
+SDAccel GitHub リポジトリから[この例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt/loop_fusion_c)をダウンロードして実行します。
 
-## Get Support and Troubleshoot Issues
-The [AWS F1 SDAccel Development forum](https://forums.aws.amazon.com/forum.jspa?forumID=243) is the place to look for answers, share knowledge, and get support. Make sure to subscribe to the forum by clicking the **Watch Forum** link in the Available Actions section.
+### その他の例
 
-<br>
+ザイリンクスの Github リポジトリには、学習しやすくするための例が 80 以上含まれています。関心のある例を検索するには、リポジトリを参照し、コード記述例や最適化例が多く含まれたものから始めます。
 
-## Learn More about the SDAccel Environment
-#### SDAccel QuickTake Video Tutorials
-[Fundamental Concepts of Application Host Code](https://www.xilinx.com/video/hardware/concepts-of-application-host-code.html)
+その他の [OpenCL カーネルのコード記述および最適化例](https://github.com/Xilinx/SDAccel_Examples/tree/2018.2/getting_started/kernel_opt)も参照してください。
 
 
-#### Documentation for SDAccel v2018.3
-* _SDx Development Environment Release Notes, Installation, and Licensing Guide_ ([UG1238](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1238-sdx-rnil.pdf))
-* _SDAccel Programmers Guide_ ([UG1277](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1277-sdaccel-programmers-guide.pdf))
-* _SDAccel Environment User Guide_ ([UG1023](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1023-sdaccel-user-guide.pdf))
-* _SDAccel Environment Optimization Guide_ ([UG1207](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1207-sdaccel-optimization-guide.pdf))
-* _SDAccel Environment Tutorial_ ([UG1021](https://www.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1021-sdaccel-intro-tutorial.pdf))
+## サポートを利用して問題をトラブルシュート
+
+[AWS F1 SDAccel 開発フォーラム](https://forums.aws.amazon.com/forum.jspa?forumID=243)は、質問し合ったり、知識を共有したり、サポートを得るための場です。\[Available Actions] セクションにある **\[**Watch Forum**]** リンクをクリックして、このフォーラムを購読するようにしてください。
+
+
+## SDAccel 環境についてさらに学ぶ
+
+#### SDAccel QuickTake ビデオ チュートリアル
+
+[アプリケーション ホスト コードの基本概念](https://japan.xilinx.com/video/hardware/concepts-of-application-host-code.html)
+
+#### SDAccel v2018.3 の資料
+
+* 『SDx 環境リリース ノート、インストール、およびライセンス ガイド』 ([UG1238](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1238-sdx-rnil.pdf))
+* 『SDAccel プログラマ ガイド』 ([UG1277](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1277-sdaccel-programmers-guide.pdf))
+* 『SDAccel 環境ユーザー ガイド』 ([UG1023](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1023-sdaccel-user-guide.pdf))
+* 『SDAccel 環境最適化ガイド』 ([UG1207](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1207-sdaccel-optimization-guide.pdf))
+* 『_SDAccel_ 環境チュートリアル』 ([UG1021](https://japan.xilinx.com/cgi-bin/docs/rdoc?v=replace;d=ug1021-sdaccel-intro-tutorial.pdf))
 
 <hr/>
-<p align="center"><b>
-<a href="STEP5.md">NEXT: Install and Run SDAccel on your own Machine</a>
-</b></p><br>
-<hr/>
+<p align="center"><b><a href="STEP5.md">次へ: コンピューターに SDAccel をインストールして実行</a></b></p><br><hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

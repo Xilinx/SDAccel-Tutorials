@@ -1,54 +1,60 @@
-# Install and Run SDAccel on Your Own Machine
+# コンピューターに SDAccel をインストールして実行
 
-The SDAccel™ flow for AWS F1 supports the following development models:
-- Cloud-based development on AWS EC2 cloud instances
-- On-premise development on your own local workstations
+AWS F1 の SDAccel™ フローでは、次の開発モデルがサポートされています。
 
-In both cases, the final binaries are deployed on an AWS F1 instance.
+- AWS EC2 クラウド インスタンスでのクラウドベースの開発
+- ローカル ワークステーションでのオンプレミス開発
 
-This guide provides step-by-step instructions for getting started with the on-premise flow and covers the following:
-1. Installing and licensing SDAccel in your own environment
-1. Building your application on-premise with SDAccel
-1. Uploading and executing your application on F1
+どちらの場合も、AWS F1 インスタンスで最終的なバイナリが運用されます。
 
-## Prerequisites
-Before going through the steps described in this document, you should complete the tutorial on how to [Create, Configure, and Test an AWS F1 instance](STEP1.md). It is important that you are familiar with the cloud-based development environment before setting up SDAccel in your own environment.
+このガイドでは、オンプレミス フローを始める詳細な手順、特に次の点について説明します。
 
-## Requirements
-The supported operating systems for SDaccel on-premise development are:
-  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64-bit)
-  - CentOS 7.2
-  - CentOS 7.3-7.4 (64-bit)
-  - Ubuntu Linux 16.04.3 LTS (64-bit)
-    - Linux kernel 4.4.0 is supported
-    - Ubuntu LTS enablement (also called HWE or Hardware Enablement) is _not_ supported
+1. ユーザー環境で SDAccel をインストールしてライセンスを使用
+2. SDAccel を使用したオンプレミスでのアプリケーションの構築
+3. アプリケーションをアップロードし、F1 で実行
 
-# 1. Installing and licensing SDAccel in your own environment
+## 使用条件
 
-## Downloading the SDAccel Development Environment
-In order to develop any SDAccel application on-premise, you must install the same version of SDAccel as deployed on AWS F1.
-The SDAccel installer can be found here:
+このガイドで説明されている手順を進める前に、「[AWS F1 インスタンスの作成、設定、テスト](STEP1.md)」のチュートリアルを終わらせてください。ユーザー環境で SDAccel を設定する前に、クラウドベースの開発環境に慣れておくことが重要です。
 
-* Xilinx Vivado v2018.2 or v2018.2.op (64-bit)
-* License: EF-VIVADO-SDX-VU9P-OP
-* SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
-* IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
-* URL: [https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0)
-* MD5 SUM Value: 6b6939e70d4fa90677d2c54a37ec25c7
+## 要件
 
-## Requesting a License
+SDAccel のオンプレミス開発用にサポートされている OS は次のとおりです。
 
-If you are a new user, you will also need to obtain an on-premise license of Vivado®. You can request both _node-locked_ and _floating licenses_ [here](https://www.xilinx.com/products/design-tools/acceleration-zone/ef-vivado-sdx-vu9p-op-fl-nl.html) (links are on the right side of the page).
+- Red Hat Enterprise Workstation/Server 7.3-7.4 (64 ビット)
+- CentOS 7.2
+- CentOS 7.3-7.4 (64 ビット)
+- Ubuntu Linux 16.04.3 LTS (64 ビット)
+  - Linux カーネル 4.4.0 がサポートされます。
+  - Ubuntu LTS enablement (HWE または Hardware Enablement とも呼ばれる) はサポートされません。
 
-## Installing SDAccel
+# 1\. ユーザー環境で SDAccel をインストールしてライセンスを使用
 
-* To install the tool, refer to the instructions in the _SDAccel Environment Release Notes, Installation, and Licensing Guide_ [(UG1238)](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1238-sdx-rnil.pdf).
+## SDAccel 開発環境のダウンロード
 
-## Cloning the AWS-FPGA Git Repository
+オンプレミスで SDAccel アプリケーションを開発するには、AWS F1 で運用したのと同じバージョンの SDAccel をインストールしておく必要があります。SDAccel インストーラーはこちらにあります。
 
-The AWS GitHub repository contains all the necessary platform definition files and setup scripts to run SDAccel and build a design for F1 instances. It also contains numerous examples that will help you learn more about SDAccel.  
+* ザイリンクス Vivado v2018.2 または v2018.2.op (64 ビット)
+* ライセンス: EF-VIVADO-SDX-VU9P-OP
+* ソフトウェア ビルド 2258646 (2018 年 6 月 14 日、米国山岳部標準時 20:02:38)
+* IP ビルド 2256618 (2018 年 6 月 14 日、米国山岳部標準時 22:10:49)
+* URL: [https://japan.xilinx.com/member/forms/download/xef.html?filename=Xilinx\_SDx\_op\_Lin\_2018.2\_0614\_1954\_Lin64.bin\&akdm=0](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0)
+* MD5 SUM 値: 6b6939e70d4fa90677d2c54a37ec25c7
 
-Execute the following commands on your local machine to clone the GitHub repository and configure the SDAccel environment:
+## ライセンスのリクエスト
+
+新規ユーザーの場合は、オンプレミス用の Vivado® ライセンスも取得する必要があります。ノード ロックおよびフローティング ライセンスの両方を[ここ](https://japan.xilinx.com/products/design-tools/acceleration-zone/ef-vivado-sdx-vu9p-op-fl-nl.html)からリクエストできます (リンクはページの右側にあります)。
+
+## SDAccel のインストール
+
+* ツールをインストールするには、『SDAccel 開発環境リリース ノート、インストール、ライセンス ガイド』  [(UG1238)](https://japan.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1238-sdx-rnil.pdf) を参照してください。
+
+## AWS-FPGA Git リポジトリのクローン
+
+AWS GitHub には、F1 インスタンス用に SDAccel を実行しデザインを構築するために必要なプラットフォーム定義ファイルおよび設定スクリプトがすべて含まれています。また、SDAccel を学ぶためサンプルも多数含まれています。
+
+GitHub リポジトリをクローンし、SDAccel 環境を設定するには、使用コンピューターで次のコマンドを実行します。
+
 ```bash
 cd $HOME
 git clone https://github.com/aws/aws-fpga.git
@@ -56,25 +62,30 @@ cd aws-fpga
 source sdaccel_setup.sh
 ```
 
-**IMPORTANT**: Sourcing sdaccel_setup.sh may show some errors as it also tries to install runtime drivers which requires sudo access. These errors are non-intrusive, and they can be ignored.
+**重要**: sdaccel\_setup.sh を実行すると、sudo アクセスが必要なランタイム ドライバーをインストールしようとするので、エラーがいくつか表示される可能性があります。これらのエラーは重要ではないので、無視しても問題はありません。
 
-# 2. Building your design on-premise with SDAccel
+# 2\. SDAccel を使用したオンプレミスでのデザインの構築
 
-These steps will show you how to:
-- Confirm that you can run SDAccel on your local machine.
-- Generate binaries which you can then deploy on the F1 instance.
+このモジュールでは、次の方法について説明します。
 
-When using GitHub examples, you can execute same sets of commands that you have used on an AWS EC2 instance.
+- ローカル コンピューターで SDAccel を実行できることを確認。
+- F1 インスタンで後で運用できるバイナリを生成。
 
-## Starting the GUI
-TO invoke the SDAccel GUI, enter the following command:
+GitHub のサンプルを使用して、AWS EC2 インスタンスで使用したのと同じコマンド セットを実行できます。
+
+## GUI の起動
+
+SDAccel の GUI を起動するには、次のコマンドを入力します。
+
 ```bash
 sdx
 ```
-After you confirm that the GUI has opened successfully, close the GUI.
 
-## Running SW Emulation
-Execute the following commands to run the SW Emulation step for the SDAccel `helloworld` example:
+GUI が問題なく開いたことを確認したら、GUI を閉じます。
+
+## ソフトウェア エミュレーションの実行
+
+次のコマンドを実行し、SDAccel の `helloworld` のソフトウェア エミュレーション ステップを実行します。
 
 ```bash
 cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
@@ -82,9 +93,9 @@ make clean
 make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 ```
 
-## Running HW Emulation
+## ハードウェア エミュレーションの実行
 
-Execute the following commands to run the HW Emulation step for the SDAccel `helloworld` example:
+次のコマンドを実行し、SDAccel の `helloworld` のハードウェア エミュレーション ステップを実行します。
 
 ```bash
 cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
@@ -92,9 +103,9 @@ make clean
 make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 ```
 
-## Building for F1 Deployment
+## F1 運用目的で構築
 
-* Execute the following commands to build the FPGA binary for the SDAccel `helloworld` example:
+* 次のコマンドを実行し、SDAccel の `helloworld` の FPGA バイナリを構築します。
 
 ```bash
 cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
@@ -102,56 +113,69 @@ make clean
 make TARGETS=hw DEVICES=$AWS_PLATFORM all
 ```
 
-The build process will generate the host and FPGA binaries.  
-1. Host binary: `./helloworld`  
-2. FPGA binary: `./xclbin/vector_addition.hw.xilinx_aws-vu9p-f1_4ddr-xpr-2pr_4_0.xclbin`
+このプロセスで、ホストおよび FPGA のバイナリが生成されます。
 
-Create an Amazon FPGA Image (AFI) from the `.xclbin` file with the `create_sdaccel_afi.sh` script by using either of the following methods:
-* Create an image locally, after installing the AWS CLI on your machine, or by
-* Upload the `.xclbin` to an AWS instance, and run the `create_sdaccel_afi.sh script` there.
+1. ホスト バイナリ: `./helloworld`
+2. FPGA バイナリ: `./xclbin/vector_addition.hw.xilinx_aws-vu9p-f1_4ddr-xpr-2pr_4_0.xclbin`
 
-In this tutorial, you will upload everything to an AWS EC2 instance.
+次のいずれかの方法で、`create_sdaccel_afi.sh` スクリプトを使用して `.xclbin` ファイルから Amazon FPGA イメージ (AFI) を作成します。
 
+* コンピューターに AWS CLI をインストールした後、イメージをローカルに作成します。
+* AWS インスタンスに `.xclbin` をアップロードし、そこで `create_sdaccel_afi.sh script` を実行します。
 
-# 3. Uploading and Executing on F1
+このチュートリアルでは、AWS EC2 インスタンスに何もかもアップロードします。
 
-This section covers the following steps:
- - Upload your FPGA binary (built on-premise) to the AWS cloud
- - Create an AFI from the `.xclbin` file
- - Compile the host program on the F1 instance
- - Execute your accelerated application on the F1 instance
+# 3\. アップロードして F1 で実行
 
-## Uploading your FPGA binary and host program to AWS
+このセクションでは、次のステップについて説明します。
 
-1. Create a tarball with the necessary files:
+- FPGA バイナリ (オンプレミスで構築) を AWS クラウドにアップロード
+- `.xclbin` ファイルから AFI を作成
+- F1 インスタンスでホスト プログラムをコンパイル
+- F1 インスタンスでアクセラレートされたアプリケーションを実行
+
+## FPGA バイナリおよびホスト プログラムを AWS クラウドにアップロード
+
+1. 必要なファイルが含まれた TAR ファイルを作成します。
+
 ```bash
 tar cvfz helloworld.tgz Makefile src xclbin/vector_addition.hw.xilinx_aws-vu9p-f1_4ddr-xpr-2pr_4_0.xclbin
 ```
-2. Start an AWS F1 instance
-3. Upload the tarball to your AWS F1 instance
+
+2. AWS F1 インスタンスを起動します。
+3. AWS F1 インスタンスに先ほど作成した TAR ファイルをアップロードします。
+
 ```bash
 scp -i ~/<AWS key pairs>.pem <xclbin file> centos@<public IP address of EC2 instance>:/home/centos/.
 ```
->**NOTE**: Alternatively, you can transfer files using an AWS S3 bucket.
 
-## Creating the Amazon FPGA Image
+> **注記**: または AWS S3 バケットを使用してファイルを転送することもできます。
 
-1. Ssh to your AWS F1 instance.
+## Amazon FPGA イメージの作成
+
+1. AWS F1 インスタンスで ssh を実行します。
+
 ```bash
 ssh -i <AWS key pairs.pem> -ssh centos@<public IP address of EC2 instance> 22
 ```
-2. Extract your tarball.
+
+2. TAR ファイルを抽出します。
+
 ```bash
 mkdir helloworld
 cd helloworld
 tar xvfz ../helloworld.tgz
-```    
-3. Setup the SDAccel environment.
+```
+
+3. SDAccel 環境を設定します。
+
 ```bash
 cd $AWS_FPGA_REPO_DIR                                         
 source sdaccel_setup.sh
 ```
-4. Create the AWS FPGA binary and AFI from the `.xclbin` file.
+
+4. AWS FPGA バイナリと AFI を `.xclbin` から作成します。
+
 ```bash
 cd $HOME/helloworld/xclbin
 $SDACCEL_DIR/tools/create_sdaccel_afi.sh \
@@ -161,29 +185,29 @@ $SDACCEL_DIR/tools/create_sdaccel_afi.sh \
     -s3_logs_key=<logs-folder-name>
 ```
 
-## Compiling the host application
-Use the Makefile to compile the host application.
+## ホスト アプリケーションのコンパイル
+
+makefile を使用してホスト アプリケーションをコンパイルします。
+
 ```bash
 cd $HOME/helloworld
 make exe
 ```
-This will create the `helloworld` program.
 
-## Executing the acceleration application on F1
+これで `helloworld` プログラムが作成されます。
 
-* After the AFI status changes to **available**, you are ready to execute on F1:
+## F1 インスタンスでアクセラレートされたアプリケーションを実行
+
+* AFI のステータスを **\[available]** に変更したら、F1 で実行する準備が整います。
+
 ```bash
 sudo sh
 source /opt/xilinx/xrt/setup.sh   
 ./helloworld
 ```
 
-This module explained how you can develop your FPGA binary on-premise, create an AFI, and execute your accelerated application on an AWS F1 instance.
+このモジュールでは、オンプレミスで FPGA バイナリを開発し、AFI を作成し、AWS F1 インスタンスでアクセラレートされたアプリケーションを実行する方法を説明しました。
 
 <hr/>
-<p align="center"><b>
-<a href="README.md">Return to the 5-steps getting started guide</a>
-</b></p>
-<br>
-<hr/>
+<p align="center"><b><a href="README.md">入門ガイドに戻る</a></b></p><br><hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>

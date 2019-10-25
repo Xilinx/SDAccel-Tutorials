@@ -1,78 +1,78 @@
-# Getting Started on AWS F1 with SDAccel and RTL Kernels
+# SDAccel および RTL を使用した AWS F1 入門
 
-This getting started guide is intended for hardware designers looking to create SDAccel applications on AWS F1 leveraging new or existing RTL code.
+この入門ガイドは、新規または既存の RTL コードを利用して、AWS F1 で SDAccel アプリケーションを作成するハードウェア開発者向けのものです。
 
-## Prerequisites
-A number of preparation steps are required before being able to connect to an F1 instance. This module will show you how to:
-- Create an AWS account
-- Create an S3 bucket
-- Prepare your private connection keys
-- Request access to AWS F1 instances
+## 使用条件
+F1 インスタンスに接続できるようにする前に、いくつかの準備段階があります。このモジュールでは、次の方法について説明します。
+- AWS アカウントを作成
+- S3 バケットを作成
+- 秘密接続キーを準備
+- AWS F1 インスタンスへのアクセスをリクエスト
 
-[**FOLLOW THE INSTRUCTIONS**](../PREREQUISITES/README.md)
-
-<hr/>
-
-## 1. Create, configure, and test an AWS F1 instance
-This module will show you how to:
-- Launch and configure an AWS F1 instance
-- Connect to the instance and run a simple test
-- Close the session
-
-[**FOLLOW THE INSTRUCTIONS**](STEP1.md)
+[**詳細な手順**](../PREREQUISITES/README.md)
 
 <hr/>
 
-## 2. Run your first SDAccel program on AWS F1
-This module will show you how to:
-- Package an existing RTL design as an SDAccel acceleration kernel
-- Compile, execute, and profile a simple example accelerated with the RTL kernel
+## 1. AWS F1 インスタンスの作成、設定、テスト
+このモジュールでは、次の方法について説明します。
+- AWS F1 インスタンスを起動して設定
+- インスタンスへ接続して単純なテストを実行
+- セッションを閉じる
 
-[**FOLLOW THE INSTRUCTIONS**](STEP2.md)
-
-<hr/>
-
-## 3. Learn more about AWS F1 and the SDAccel RTL flow
-This module will take you through an introductory online training course covering:
-- Introduction to AWS F1 and the SDAccel Development Environment
-- AWS F1 hardware specifications and requirements
-- Packaging existing RTL IP for AWS F1
-- Running a host-side application with an RTL kernel
-
-[**FOLLOW THE INSTRUCTIONS**](STEP3.md)
+[**詳細な手順**](STEP1.md)
 
 <hr/>
 
-## 4. Practice and experiment
-This module will show you how to:
-- Run additional labs and examples on F1
-- Learn more about SDAccel
-- Get support and troubleshoot issues
+## 2. AWS F1 で最初のプログラムを実行
+このモジュールでは、次の方法について説明します。
+- 既存の RTL デザインを SDAccel アクセラレーション カーネルとしてパッケージ
+- RTL カーネルを使用してアクセラレートした単純なサンプルをコンパイル、実行、プロファイル
 
-[**FOLLOW THE INSTRUCTIONS**](STEP4.md)
+[**詳細な手順**](STEP2.md)
 
 <hr/>
 
-## 5. Install and run SDAccel on your own machine
-The AWS F1 instances loaded with the FPGA developer AMI provide all the necessary tools to develop, compile, execute and debug your application in the Amazon cloud. Optionally, it is also possible to develop and compile your application on your own machine and upload it to AWS for execution and debug in the cloud.
+## 3. AWS F1 および SDAccel RTL フローを詳細に学ぶ
+このモジュールでは、次のトピックのオンライン トレーニング コース (概要) について説明します。
+- AWS F1 および SDAccel 開発環境の概要
+- AWS F1 ハードウェア仕様および要件
+- AWSF1 用の既存 RTL IP のパッケージ
+- RTL カーネルを使用したホストサイドのアプリケーションの実行
 
-This optional module will show you how to:
-- Install and license SDAccel locally on your machine
-- Compile a simple example locally
-- Upload and execute it on AWS F1
+[**詳細な手順**](STEP3.md)
 
-You will need the following:
-- A Xilinx account — create one [here](https://www.xilinx.com/registration/create-account.html)
-- A Linux computer running either:
-  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64-bit)
+<hr/>
+
+## 4. 演習
+このモジュールでは、次の方法について説明します。
+- F1 に関するその他の演習および例を実行
+- SDAccel についてさらに学ぶ
+- サポートを利用して問題をトラブルシュート
+
+[**詳細な手順**](STEP4.md)
+
+<hr/>
+
+## 5. コンピューターに SDAccel をインストールして実行
+FPGA Developer AMI に含まれる AWS F1 インスタンスには、Amazon クラウドでアプリケーションを開発、コンパイル、実行、およびデバッグするのに必要なツールがすべて含まれています。オプションで、アプリケーションを自分のコンピューターで開発およびコンパイルしてから、AWS にアップロードし、クラウドで実行およびデバッグすることもできます。
+
+このオプションのモジュールでは、次の方法について説明します。
+- SDAccel をコンピューターのローカルにインストールして、ライセンス取得
+- 単純な例をローカルでコンパイル
+- AWS F1 にアップロードして実行
+
+次のものが必要になります。
+- ザイリンクス アカウント — [ここ](https://japan.xilinx.com/registration/create-account.html) で作成
+- 次のいずれかを実行する Linux コンピューター:
+  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64 ビット)
   - CentOS 7.2
-  - CentOS 7.3-7.4 (64-bit)
-  - Ubuntu Linux 16.04.3 LTS (64-bit)
-    - Linux kernel 4.4.0 is supported
-    - Ubuntu LTS enablement (also called HWE or Hardware Enablement) is not supported
+  - CentOS 7.3-7.4 (64 ビット)
+  - Ubuntu Linux 16.04.3 LTS (64 ビット)
+    - Linux カーネル 4.4.0 がサポートされます。
+    - Ubuntu LTS enablement (HWE または Hardware Enablement とも呼ばれる) はサポートされません。
 
 
-[**FOLLOW THE INSTRUCTIONS**](STEP5.md)
+[**詳細な手順**](STEP5.md)
 <br>
 <hr/>
-<p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+<p align="center"><sup>Copyright&copy; 2019-2019 Xilinx</sup></p>
