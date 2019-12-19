@@ -64,12 +64,9 @@ This optional module will show you how to:
 You will need the following:
 - A Xilinx account — create one [here](https://www.xilinx.com/registration/create-account.html)
 - A Linux computer running either:
-  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64-bit)
-  - CentOS 7.2
-  - CentOS 7.3-7.4 (64-bit)
-  - Ubuntu Linux 16.04.3 LTS (64-bit)
-    - Linux kernel 4.4.0 is supported
-    - Ubuntu LTS enablement (also called HWE or Hardware Enablement) is not supported
+  - Ubuntu 16.04.5 LTS, 18.04.1 LTS
+  - CentOS 7.4, 7.5, 7.6
+  - RHEL 7.4, 7.5, 7.6
 
 
 [**FOLLOW THE INSTRUCTIONS**](STEP5.md)
