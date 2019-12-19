@@ -16,25 +16,18 @@ Before going through the steps described in this document, you should complete t
 
 ## Requirements
 The supported operating systems for SDaccel on-premise development are:
-  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64-bit)
-  - CentOS 7.2
-  - CentOS 7.3-7.4 (64-bit)
-  - Ubuntu Linux 16.04.3 LTS (64-bit)
-    - Linux kernel 4.4.0 is supported
-    - Ubuntu LTS enablement (also called HWE or Hardware Enablement) is _not_ supported
+  - Ubuntu 16.04.5 LTS, 18.04.1 LTS
+  - CentOS 7.4, 7.5, 7.6
+  - RHEL 7.4, 7.5, 7.6
+
+Visit [this page](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/igz1531201833632.html#olw1504034315783) for a complete description of other system requirements.
 
 # 1. Installing and licensing SDAccel in your own environment
 
 ## Downloading the SDAccel Development Environment
-In order to develop any SDAccel application on-premise, you must install the same version of SDAccel as deployed on AWS F1.
-The SDAccel installer can be found here:
 
-* Xilinx Vivado v2018.2 or v2018.2.op (64-bit)
-* License: EF-VIVADO-SDX-VU9P-OP
-* SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
-* IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
-* URL: [https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0)
-* MD5 SUM Value: 6b6939e70d4fa90677d2c54a37ec25c7
+In order to develop any SDAccel application on-premise, you must install the same version of SDAccel as deployed on AWS F1. Refer to this page for tool version and download instructions: [enabling development on premises](https://github.com/aws/aws-fpga/edit/master/hdk/docs/on_premise_licensing_help.md)
+
 
 ## Requesting a License
 
@@ -42,7 +35,7 @@ If you are a new user, you will also need to obtain an on-premise license of Viv
 
 ## Installing SDAccel
 
-* To install the tool, refer to the instructions in the _SDAccel Environment Release Notes, Installation, and Licensing Guide_ [(UG1238)](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1238-sdx-rnil.pdf).
+* To install the tool, refer to the instructions in the _SDAccel Environment Release Notes, Installation, and Licensing Guide_ [(UG1238)](https://www.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html).
 
 ## Cloning the AWS-FPGA Git Repository
 
@@ -77,7 +70,7 @@ After you confirm that the GUI has opened successfully, close the GUI.
 Execute the following commands to run the SW Emulation step for the SDAccel `helloworld` example:
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -87,7 +80,7 @@ make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 Execute the following commands to run the HW Emulation step for the SDAccel `helloworld` example:
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -97,7 +90,7 @@ make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 * Execute the following commands to build the FPGA binary for the SDAccel `helloworld` example:
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make TARGETS=hw DEVICES=$AWS_PLATFORM all
 ```

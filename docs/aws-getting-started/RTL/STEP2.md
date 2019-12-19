@@ -245,7 +245,7 @@ The command will return **Available** when the AFI is created, registered, and r
 
 ```json
   State: {
-      "Code" : Available"
+      "Code" : Available
   }
 ```
 
