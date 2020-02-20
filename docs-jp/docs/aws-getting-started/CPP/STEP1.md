@@ -2,13 +2,13 @@
 
 このモジュールでは、次の手順を実行します。
 
-1. [AWS コンソールから EC2 F1 インスタンスを作成](#1-creating-an-ec2-f1-instance-from-the-aws-console)
-2. [リモート デスクトップを使用してインスタンスへ接続](#2-connecting-to-the-instance-with-a-remote-desktop-client)
-3. [SDAccel で使用できるようにインスタンスを設定](#3-configuring-the-instance-for-working-with-sdaccel)
-4. [SDAccel の Hello World 例を AWS F1 で実行](#4-running-the-sdaccel-hello-world-example-on-aws-f1)
-5. [セッションを閉じる](#5-closing-the-session)
+1. [AWS コンソールから EC2 F1 インスタンスを作成](STEP1.md#1-aws-コンソールから-ec2-f1-インスタンスを作成)
+2. [リモート デスクトップを使用してインスタンスへ接続](STEP1.md#2-リモート-デスクトップを使用してインスタンスへ接続)
+3. [SDAccel で使用できるようにインスタンスを設定](STEP1.md#3-sdaccel-で使用できるようにインスタンスを設定)
+4. [SDAccel の Hello World 例を AWS F1 で実行](STEP1.md#4-sdaccel-の-hello-world-例を-aws-f1-で実行)
+5. [セッションを閉じる](STEP1.md#5-セッションを閉じる)
 
-> **重要**: このモジュールは、[**使用条件**](PREREQUISITES/README.md)を確認してから開始するようにしてください。
+> **重要**: このモジュールは、必ず*入門ガイド*の[**必須条件**](../PREREQUISITES/README.md)を確認してから開始するようにしてください。
 
 ## 1\. AWS コンソールから EC2 F1 インスタンスを作成
 
@@ -106,7 +106,13 @@ source <(curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Scripts/s
 
 このスクリプトの実行には約 10 分かかります。最後に \`centos\` ユーザー用のパスワードを設定して終了します。
 
-**重要**: スクリプトで生成されるパスワードはメモしておきます。RDP を使用して接続する際に必要となります。2\.ウェブ ブラウザーで **\[**AWS EC2 dashboard**]** に戻ります。3\.インスタンス名を選択したら、**\[Actions]** → **\[Instance State]** → **\[Reboot]** をクリックします。4\.インスタンスがリブート サイクルを終了するまで数分待ちます。
+**重要**: スクリプトで生成されるパスワードはメモしておきます。RDP を使用して接続する際に必要となります。
+
+2. ウェブ ブラウザーで **\[**AWS EC2 dashboard**]** に戻ります。
+
+3. インスタンス名を選択したら、**\[Actions]** → **\[Instance State]** → **\[Reboot]** をクリックします。
+
+4. インスタンスがリブート サイクルを終了するまで数分待ちます。
 
 終了したら、リモート デスクトップ クライアントを使用してインスタンスを接続できるようになります。
 
@@ -127,7 +133,7 @@ source <(curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Scripts/s
 * **\[Yes]** をクリックしてメッセージを消します。**\[Remote Desktop Connection]** ウィンドウのログイン画面が表示されます。
 * 次を使用してログインします。
   - ユーザー名: **centos**
-  - パスワード: `set_gui.sh` スクリプトで生成されたパスワード
+  - パスワード: `setup_gui.sh` スクリプトで生成されたパスワード
 * **\[OK]** をクリックします。
 
 これで Centos 7 および FPGA Developer AMI を実行する F1 インスタンスに接続できました。
@@ -151,7 +157,7 @@ Default output format [None]: json
 
 #### 手順 2: SDAccel 環境を設定
 
-ここでは、AWS F1 でアプリケーションをビルドして実行するのに必要なファイルをインストールします。必要なファイルは、SDAccel\&tm; プラットフォーム、ランタイム、ドライバーなどです。
+ここでは、AWS F1 でアプリケーションをビルドして実行するのに必要なファイルをインストールします。必要なファイルは、SDAccel プラットフォーム、ランタイム、ドライバーなどです。
 
 1. インスタンス ターミナルのコマンド ラインから次のコマンドを実行します。
    ```bash
@@ -161,11 +167,12 @@ Default output format [None]: json
    ```
 
 > **注記**: sdaccel\_setup.sh は、最初に実行する際にプラットフォームをダウンロードして、ランタイムおよびドライバーをコンパイルするので、読み込むのに数分かかります。2 回目からはかなり速くなります。sdaccel\_setup.sh では SDAccel の実行に必要な環境変数が設定されるので、新しいターミナルを開くたびに、sdaccel\_setup.sh を読み込む必要があります。  
-2\.ターミナルを閉じます。
+>
+2\. ターミナルを閉じます。
 
 ## 4\. SDAccel の Hello World 例を AWS F1 で実行
 
-この最後のセクションでは、AWS F1 で SDAccel の `helloworld_ocl` 例を実行し、環境が正しく設定されているかどうかを確認します。
+この最後のセクションでは、AWS F1 で SDAccel の `helloworld_c` 例を実行し、環境が正しく設定されているかどうかを確認します。
 
 #### 手順 1: SDAccel 環境を設定
 
@@ -184,7 +191,7 @@ SDAccel エミュレーション フローでは、F1 でアプリケーショ�
 1. SDAccel の 'hello world' 例でソフトウェア エミュレーション フローを実行します。
 
 ```bash
-cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
+cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -192,7 +199,7 @@ make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 2. SDAccel の 'hello world' 例でハードウェア エミュレーション フローを実行します。
 
 ```bash
-cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
+cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -207,15 +214,15 @@ F1 で実行するには、次のファイルをビルドする必要があり�
 
 これらのファイルは、次の 2 つのプロセスでビルドできます。まず SDAccel を使用してホスト アプリケーションとザイリンクス FPGA バイナリを作成します。次に AWS の create\_sdaccel\_afi.sh スクリプトを使用して、ザイリンクス FPGA バイナリから AFI と AWS FPGA バイナリを作成します。
 
-1. ホスト アプリケーションと \&ast;.xclbin (ザイリンクス FPGA バイナリ ファイル) をビルドします。
+1. ホスト アプリケーションと \*.xclbin (ザイリンクス FPGA バイナリ ファイル) をビルドします。
 
 ```bash
-cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
+cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_c/
 make clean
 make TARGETS=hw DEVICES=$AWS_PLATFORM all
 ```
 
-2. AWS FPGA バイナリと AFI を \&ast;.xclbin (ザイリンクス FPGA バイナリ ファイル) から作成します。
+2. AWS FPGA バイナリと AFI を \*.xclbin (ザイリンクス FPGA バイナリ ファイル) から作成します。
 
 ```bash
 cd xclbin
@@ -262,10 +269,12 @@ aws ec2 describe-fpga-images --fpga-image-ids <AFI ID>
 
 #### 手順 5: ホスト アプリケーションを実行
 
+:warning: **重要**: 前の手順には AWS EC2 F1 インスタンスは不要です。前の手順は、C4 や C5 など、ほかの AWS EC2 F1 インスタンスで実行できます。ただし、その後の手順は、AWS EC2 F1 インスタンスで実行する必要があります。F1 インスタンスで次の手順を実行しない場合はエラーメッセージが表示されます。
+
 1. インスタンス ターミナルで次のコマンドを実行します。
 
 ```bash
-cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_ocl/
+cd $SDACCEL_DIR/examples/xilinx/getting_started/host/helloworld_c/
 sudo sh
 source /opt/xilinx/xrt/setup.sh   
 ./helloworld
@@ -321,3 +330,5 @@ source /opt/xilinx/xrt/setup.sh
 <hr/>
 <p align="center"><b><a href="STEP2.md">次の演習: AWS F1 で最初の SDAccel プログラムを実行</a></b></p><br><hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+
+この資料は表記のバージョンの英語版を翻訳したもので、内容に相違が生じる場合には原文を優先します。資料によっては英語版の更新に対応していないものがあります。日本語版は参考用としてご使用の上、最新情報につきましては、必ず最新英語版をご参照ください。

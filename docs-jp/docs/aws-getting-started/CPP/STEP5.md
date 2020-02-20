@@ -13,7 +13,7 @@ AWS F1 の SDAccel™ フローでは、次の開発モデルがサポートさ�
 2. SDAccel を使用したオンプレミスでのアプリケーションの構築
 3. アプリケーションをアップロードし、F1 で実行
 
-## 使用条件
+## 使用要件
 
 このガイドで説明されている手順を進める前に、「[AWS F1 インスタンスの作成、設定、テスト](STEP1.md)」のチュートリアルを終わらせてください。ユーザー環境で SDAccel を設定する前に、クラウドベースの開発環境に慣れておくことが重要です。
 
@@ -21,25 +21,17 @@ AWS F1 の SDAccel™ フローでは、次の開発モデルがサポートさ�
 
 SDAccel のオンプレミス開発用にサポートされている OS は次のとおりです。
 
-- Red Hat Enterprise Workstation/Server 7.3-7.4 (64 ビット)
-- CentOS 7.2
-- CentOS 7.3-7.4 (64 ビット)
-- Ubuntu Linux 16.04.3 LTS (64 ビット)
-  - Linux カーネル 4.4.0 がサポートされます。
-  - Ubuntu LTS enablement (HWE または Hardware Enablement とも呼ばれる) はサポートされません。
+- Ubuntu 16.04.5 LTS、18.04.1 LTS
+- CentOS 7.4、7.5、7.6
+- RHEL 7.4、7.5、7.6
+
+ほかのシステム要件の詳細は[このページ](https://japan.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/igz1531201833632.html#olw1504034315783)を参照してください。
 
 # 1\. ユーザー環境で SDAccel をインストールしてライセンスを使用
 
 ## SDAccel 開発環境のダウンロード
 
-オンプレミスで SDAccel アプリケーションを開発するには、AWS F1 で運用したのと同じバージョンの SDAccel をインストールしておく必要があります。SDAccel インストーラーはこちらにあります。
-
-* ザイリンクス Vivado v2018.2 または v2018.2.op (64 ビット)
-* ライセンス: EF-VIVADO-SDX-VU9P-OP
-* ソフトウェア ビルド 2258646 (2018 年 6 月 14 日、米国山岳部標準時 20:02:38)
-* IP ビルド 2256618 (2018 年 6 月 14 日、米国山岳部標準時 22:10:49)
-* URL: [https://japan.xilinx.com/member/forms/download/xef.html?filename=Xilinx\_SDx\_op\_Lin\_2018.2\_0614\_1954\_Lin64.bin\&akdm=0](https://www.xilinx.com/member/forms/download/xef.html?filename=Xilinx_SDx_op_Lin_2018.2_0614_1954_Lin64.bin&akdm=0)
-* MD5 SUM 値: 6b6939e70d4fa90677d2c54a37ec25c7
+オンプレミスで SDAccel アプリケーションを開発するには、AWS F1 で運用したのと同じバージョンの SDAccel をインストールしておく必要があります。ツール バージョンおよびダウンロード手順を確認するには、[「オンプレミスでの開発を可能にする」](https://github.com/aws/aws-fpga/edit/master/hdk/docs/on_premise_licensing_help.md)をページを参照してください。
 
 ## ライセンスのリクエスト
 
@@ -47,7 +39,7 @@ SDAccel のオンプレミス開発用にサポートされている OS は次�
 
 ## SDAccel のインストール
 
-* ツールをインストールするには、『SDAccel 開発環境リリース ノート、インストール、ライセンス ガイド』  [(UG1238)](https://japan.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1238-sdx-rnil.pdf) を参照してください。
+* ツールをインストールするには、『*SDAccel 環境リリース ノート、インストール、およびライセンス ガイド*』 [(UG1238)](https://japan.xilinx.com/html_docs/xilinx2019_1/sdaccel_doc/yrc1534452173645.html) にある手順を参照してください。
 
 ## AWS-FPGA Git リポジトリのクローン
 
@@ -88,7 +80,7 @@ GUI が問題なく開いたことを確認したら、GUI を閉じます。
 次のコマンドを実行し、SDAccel の `helloworld` のソフトウェア エミュレーション ステップを実行します。
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -98,7 +90,7 @@ make check TARGETS=sw_emu DEVICES=$AWS_PLATFORM all
 次のコマンドを実行し、SDAccel の `helloworld` のハードウェア エミュレーション ステップを実行します。
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 ```
@@ -108,7 +100,7 @@ make check TARGETS=hw_emu DEVICES=$AWS_PLATFORM all
 * 次のコマンドを実行し、SDAccel の `helloworld` の FPGA バイナリを構築します。
 
 ```bash
-cd $HOME/aws-fpga/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c/
+cd $HOME/aws-fpga/SDAccel/examples/xilinx_2019.1/getting_started/host/helloworld_c/
 make clean
 make TARGETS=hw DEVICES=$AWS_PLATFORM all
 ```
@@ -125,7 +117,7 @@ make TARGETS=hw DEVICES=$AWS_PLATFORM all
 
 このチュートリアルでは、AWS EC2 インスタンスに何もかもアップロードします。
 
-# 3\. アップロードして F1 で実行
+# 3\.アップロードして F1 で実行
 
 このセクションでは、次のステップについて説明します。
 
@@ -211,3 +203,5 @@ source /opt/xilinx/xrt/setup.sh
 <hr/>
 <p align="center"><b><a href="README.md">入門ガイドに戻る</a></b></p><br><hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+
+この資料は表記のバージョンの英語版を翻訳したもので、内容に相違が生じる場合には原文を優先します。資料によっては英語版の更新に対応していないものがあります。日本語版は参考用としてご使用の上、最新情報につきましては、必ず最新英語版をご参照ください。

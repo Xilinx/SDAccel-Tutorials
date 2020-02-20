@@ -14,10 +14,8 @@
 
 [**ビデオを視聴**](https://japan.xilinx.com/video/hardware/concepts-of-application-host-code.html)
 
-### 4\. OpenCL メモリ アーキテクチャ
-
-[**ビデオを視聴**](https://japan.xilinx.com/video/hardware/opencl-memory-architecture.html)
-
 <hr/>
 <p align="center"><b><a href="STEP4.md">次へ: C/C++ カーネルを使用した演習</a></b></p><br><hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+
+この資料は表記のバージョンの英語版を翻訳したもので、内容に相違が生じる場合には原文を優先します。資料によっては英語版の更新に対応していないものがあります。日本語版は参考用としてご使用の上、最新情報につきましては、必ず最新英語版をご参照ください。

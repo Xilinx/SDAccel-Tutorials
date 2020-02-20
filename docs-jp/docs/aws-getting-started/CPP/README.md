@@ -1,10 +1,14 @@
+<p align="right">
+<a href="https://github.com/Xilinx/SDAccel-Tutorials/tree/master/docs/aws-getting-started/CPP/README.md">English</a> | <a>日本語</a>
+</p>
+
 # SDAccel および C/C++ カーネルを使用した AWS F1 入門
 
 この入門ガイドは、C/C++ または OpenCL™ 関数から作成したアクセラレーション カーネルを使用して AWS F1 で SDAccel アプリケーションを作成する開発者向けのものです。
 
-## 使用条件
+## 必須条件
 
-F1 インスタンスに接続できるようにする前に、いくつかの準備段階があります。このモジュールでは、次の方法について説明します。
+F1 インスタンスに接続できるようにするには、いくつかの準備段階があります。このモジュールでは、次の方法について説明します。
 
 - AWS アカウントを作成
 - S3 バケットを作成
@@ -65,7 +69,7 @@ F1 インスタンスに接続できるようにする前に、いくつかの�
 
 ## 5\. コンピューターに SDAccel をインストールして実行
 
-FPGA Developer AMI に含まれる AWS F1 インスタンスには、アプリケーションを Amazon クラウドで開発、コンパイル、実行、およびデバッグするのに必要なツールがすべて含まれています。オプションで、アプリケーションを自分のマシンで開発およびコンパイルしてから、AWS にアップロードして、クラウドで実行およびデバッグすることもできます。
+FPGA Developer AMI に含まれる AWS F1 インスタンスには、アプリケーションを Amazon クラウドで開発、コンパイル、実行、デバッグするのに必要なツールがすべて含まれています。オプションで、アプリケーションを自分のマシンで開発およびコンパイルしてから、AWS にアップロードして、クラウドで実行およびデバッグすることもできます。
 
 このオプションのモジュールでは、次の方法について説明します。
 
@@ -75,16 +79,15 @@ FPGA Developer AMI に含まれる AWS F1 インスタンスには、アプリ�
 
 次のものが必要になります。
 
-- ザイリンクス アカウント — [ここで作成](https://www.xilinx.com/registration/create-account.html)
+- ザイリンクス アカウント — [ここで作成](https://japan.xilinx.com/registration/create-account.html)
 - 次のいずれかを実行する Linux コンピューター:
-  - Red Hat Enterprise Workstation/Server 7.3-7.4 (64 ビット)
-  - CentOS 7.2
-  - CentOS 7.3-7.4 (64 ビット)
-  - Ubuntu Linux 16.04.3 LTS (64 ビット)
-    - Linux カーネル 4.4.0 がサポートされます。
-    - Ubuntu LTS enablement (HWE または Hardware Enablement とも呼ばれる) __はサポートされません。
+  - Ubuntu 16.04.5 LTS、18.04.1 LTS
+  - CentOS 7.4、7.5、7.6
+  - RHEL 7.4、7.5、7.6
 
 [**詳細な手順** <br>](STEP5.md)
 
 <hr/>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+
+この資料は表記のバージョンの英語版を翻訳したもので、内容に相違が生じる場合には原文を優先します。資料によっては英語版の更新に対応していないものがあります。日本語版は参考用としてご使用の上、最新情報につきましては、必ず最新英語版をご参照ください。

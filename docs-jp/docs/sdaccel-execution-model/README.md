@@ -48,3 +48,5 @@ SDAccel 環境実行モデルでは、次が実行されます。
 <p align= center><b><a href="../../README.md">メイン ページに戻る</a> — <a href="../sdaccel-getting-started/README.md">入門コースの初めに戻る</a></b></p>
 </br>
 <p align="center"><sup>Copyright&copy; 2019 Xilinx</sup></p>
+
+この資料は表記のバージョンの英語版を翻訳したもので、内容に相違が生じる場合には原文を優先します。資料によっては英語版の更新に対応していないものがあります。日本語版は参考用としてご使用の上、最新情報につきましては、必ず最新英語版をご参照ください。
