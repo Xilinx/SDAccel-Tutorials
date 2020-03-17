@@ -2,6 +2,10 @@
 
 This getting started guide is intended for developers looking to create SDAccel applications on AWS F1 using acceleration kernels created from C/C++ or OpenCL™ functions.
 
+
+>**IMPORTANT:**  Please makes sure to use the “FPGA Developer AMI - 1.7.0” and Xilinx Tools: 2019.1 to run these labs. We will update the labs with latest “FPGA Developer AMI – 1.8.x” shortly.
+
+
 ## Prerequisites
 A number of preparation steps are required before being able to connect to an F1 instance. This module will show you how to:
 - Create an AWS account
