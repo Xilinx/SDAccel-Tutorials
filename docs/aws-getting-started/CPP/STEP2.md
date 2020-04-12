@@ -13,9 +13,9 @@ This lab uses an example from the Xilinx® SDAccel™ Example GitHub repository,
 * Create a new directory and copy over the source files needed for this tutorial:
     ```bash
     cd /home/centos
-    cp -rp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.2/getting_started/host/helloworld_c .
-    cp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.2/libs/xcl2/xcl2.cpp ./helloworld_c/src
-    cp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.2/libs/xcl2/xcl2.hpp ./helloworld_c/src
+    cp -rp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.3/getting_started/host/helloworld_c .
+    cp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.3/libs/xcl2/xcl2.cpp ./helloworld_c/src
+    cp $AWS_FPGA_REPO_DIR/SDAccel/examples/xilinx_2018.3/libs/xcl2/xcl2.hpp ./helloworld_c/src
     cd helloworld_c
     ```   
 
